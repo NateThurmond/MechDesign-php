@@ -1,0 +1,270 @@
+
+
+#mechsideBar {
+    text-align: center;
+    width: 200px;
+    clear: both;
+}
+
+.highlighted2 {
+    background-color:#F9EDBE;
+    box-shadow: 6px 6px 5px black;
+    outline-color: blue;
+    cursor:pointer;
+}
+
+.highlighted3 {
+    background-color:#F9EDBE;
+    box-shadow: 6px 6px 5px black;
+    outline-color: blue;
+    cursor:pointer;
+}
+
+.selector {
+    margin-top: 30px;
+    margin-left: 8px;
+    background-color: white;
+    text-align: center;
+    border: 2px solid black;
+    border-radius: 5px;
+    width: 180px;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+#mechSelector {
+    margin-top: 30px;
+    margin-left: 8px;
+}
+
+#armorSelector {
+    margin-top: 30px;
+    margin-left: 8px;
+}
+
+#weaponSelector {
+    margin-top: 30px;
+    margin-left: 8px;
+}
+
+#criticalSelector {
+    margin-top: 30px;
+    margin-left: 8px;
+}
+
+.mechPickTable {
+    font-size: 15px;
+    width: 695px;
+}
+
+.mechPickTable a {
+    color: white;
+}
+
+.popoutClass {
+    display: none;
+    position: absolute;
+    border: 6px solid black;
+    border-radius: 5px;
+    z-index: 100;
+    background: grey;
+    top: -185px;
+    color: white;
+    font-size: 25px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.popoutTab {
+    width: 700px; 
+    margin-left: 200px;
+    margin-top: 315px; 
+    height: 500px; 
+}
+
+.popoutTab2 {
+    background-image:url('../images/mechArmor5.jpg');
+    background-size: 290px 500px; 
+    background-position: center center; 
+    background-repeat:no-repeat;
+    width: 340px; 
+    margin-left: 201px;
+    margin-top: 315px;
+    height: 590px; 
+}
+
+.popoutTab3 {
+    width: 700px; 
+    margin-left: 200px;
+    margin-top: 315px;
+    height: 500px;
+}
+
+.popoutTab4 {
+    width: 700px;
+    margin-left: 200px;
+    margin-top: 315px;
+    height: 500px;
+}
+
+.dividerBar {
+    height: 1px; 
+    width: 90%; 
+    color: black; 
+    background-color:#808080;
+}
+
+#LeftTorsoInc {
+    position: absolute;
+    z-index: 20;
+    margin-top: 127px;
+    margin-left: -53px;
+}
+
+#LeftTorsoDec {
+    position: absolute;
+    z-index: 20;
+    margin-top: 144px;
+    margin-left: -53px;
+}
+
+#RightTorsoInc {
+    position: absolute;
+    z-index: 21;
+    margin-top: 127px;
+    margin-left: 30px;
+}
+
+#RightTorsoDec {
+    position: absolute;
+    z-index: 21;
+    margin-top: 144px;
+    margin-left: 30px;
+}
+
+#LeftRearTorsoInc {
+    position: absolute;
+    z-index: 22;
+    margin-top: 455px;
+    margin-left: -101px;
+}
+
+#LeftRearTorsoDec {
+    position: absolute;
+    z-index: 22;
+    margin-top: 455px;
+    margin-left: -79px;
+}
+
+#RightRearTorsoInc {
+    position: absolute;
+    z-index: 22;
+    margin-top: 455px;
+    margin-left: 59px;
+}
+
+#RightRearTorsoDec {
+    position: absolute;
+    z-index: 22;
+    margin-top: 455px;
+    margin-left: 81px;
+}
+
+#centerRearTorsoInc {
+    position: absolute;
+    z-index: 22;
+    margin-top: 455px;
+    margin-left: -21px;
+}
+
+#centerRearTorsoDec {
+    position: absolute;
+    z-index: 22;
+    margin-top: 455px;
+    margin-left: 1px;
+}
+
+#RightLegInc {
+    position: absolute;
+    z-index: 23;
+    margin-top: 335px;
+    margin-left: 59px;
+}
+
+#RightLegDec {
+    position: absolute;
+    z-index: 23;
+    margin-top: 352px;
+    margin-left: 59px;
+}
+
+#LeftLegInc {
+    position: absolute;
+    z-index: 23;
+    margin-top: 335px;
+    margin-left: -84px;
+}
+
+#LeftLegDec {
+    position: absolute;
+    z-index: 23;
+    margin-top: 352px;
+    margin-left: -84px;
+}
+
+#centerTorsoInc {
+    position: absolute;
+    z-index: 23;
+    margin-top: 193px;
+    margin-left: -12px;
+}
+
+#centerTorsoDec {
+    position: absolute;
+    z-index: 23;
+    margin-top: 210px;
+    margin-left: -12px;
+}
+
+#headInc {
+    position: absolute;
+    z-index: 24;
+    margin-top: 45px;
+    margin-left: -12px;
+}
+
+#headDec {
+    position: absolute;
+    z-index: 24;
+    margin-top: 62px;
+    margin-left: -12px;
+}
+
+#LeftArmInc {
+    position: absolute;
+    z-index: 25;
+    margin-top: 127px;
+    margin-left: -117px;
+}
+
+#LeftArmDec {
+    position: absolute;
+    z-index: 25;
+    margin-top: 144px;
+    margin-left: -117px;
+}
+
+#RightArmInc {
+    position: absolute;
+    z-index: 25;
+    margin-top: 127px;
+    margin-left: 94px;
+}
+
+#RightArmDec {
+    position: absolute;
+    z-index: 25;
+    margin-top: 144px;
+    margin-left: 94px;
+}

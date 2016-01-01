@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/xampp/htdocs/MechDesign/c:\MechDesignConfig\php_Global_Vars_and_DB_Conn.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/checkLogin.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/sideBarMainPage.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/JS/jquery.js</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/getMechArmor.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/CSS/mechDesignPage.css</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/CSS/style.css</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/contact.html</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/JS/jscriptMechDesign.js</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/index.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/JS/jscriptMain.js</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/getMechData.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/mechDesign.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/xml/blurEffect.svg</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/Logout.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/register.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/displayCrits.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/getHeatSinkDataJSON.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/pickMechs.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/getMechTonnage.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/showWeaponInfo.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/CSS/mechWeaponsSideBar.css</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/registerForm.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/CSS/mechDesignSideBar.css</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/CSS/mechArmorDivs.css</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/updateCrits.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/mechInternalsCriticalsTable.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/getEngineDataJSON.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/getMechEngineData.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/mechsideBar.php</file>
+            <file>file:/C:/xampp/htdocs/MechDesign/phpIncludes/clearWeaponBlanks.php</file>
+        </group>
+    </open-files>
+</project-private>
