@@ -8,7 +8,8 @@ Description: The contact me page for my site. Am currently using it to try out a
 
 <?php
 
-    include("c:\MechDesignConfig\php_Global_Vars_and_DB_Conn.php");
+    require_once("config/config.php");
+    include("php/DB_Conn.php");
     
     $_SESSION['pageOn']=3;
     
@@ -120,7 +121,7 @@ Description: The contact me page for my site. Am currently using it to try out a
         
         <div id="main">
             
-            <?php include("registerForm.php") ?>
+            <?php include("containers/registerForm.php") ?>
             
             <h2 class="head1">Comments Section</h2>
                 <textarea name="comments" id="commentBox" placeholder="Enter comments here"></textarea>

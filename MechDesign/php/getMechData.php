@@ -1,6 +1,7 @@
 <?php
 
-    include("c:\MechDesignConfig\php_Global_Vars_and_DB_Conn.php");
+require_once("config/config.php");
+include("php/DB_Conn.php");
 
     $incArm = $_GET['incArm'];
     $mechIdPassed = intval($_GET['mechIdPassed']);

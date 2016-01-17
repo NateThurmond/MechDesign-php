@@ -1,5 +1,11 @@
 
-$(document).ready(function() {
+$(document).ready(function () {
+
+    /* Set error messages related to log in and log out
+       to disappear after 10 seconds. */
+    setTimeout(function () {
+        $('#error').remove();
+    }, 10000);
     
     $('div').removeClass('highlighted');
 
@@ -62,11 +68,6 @@ $(document).ready(function() {
     $('.navButtons').mouseleave(function() {
         $(this).removeClass('highlighted');
     });
-     
-    /*  I MAY NOT NEED THIS - TAKING IT OUT FOR NOW
-    $('.navButtons').mouseleave(function() {
-        $(this).removeClass('highlighted');
-    }); */
    
    $('.nav0').mouseenter(function() {
        if (!$('#navBar').hasClass('blur') ) {
@@ -132,4 +133,9 @@ $(document).ready(function() {
 
     });
     
+});
+
+
+$(window).resize(function () {
+    location.reload();
 });

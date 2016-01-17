@@ -1,5 +1,14 @@
 
-$(document).ready(function() {
+$(document).ready(function () {
+
+    var heatSinkNumOptions2 = [];
+    for (var i = 10; i <= 65; i++) {
+        heatSinkNumOptions2[i] = document.createElement("option");
+        heatSinkNumOptions2[i].text = i;
+        heatSinkNumOptions2[i].value = i;
+        heatSinkNumOptions2[i].id = i;
+        document.getElementById("heatSinkNumDropDown").appendChild(heatSinkNumOptions2[i]);
+    }
     
     /* These calls retrieve the initial values for Armor and engine for the mechs on page load.
        passing 1 to updateEngine() tells it that we are not updating the engine type.
@@ -49,7 +58,7 @@ $(document).ready(function() {
                 }
             }
         };
-        xmlhttp7.open("GET","phpIncludes/showWeaponInfo.php?weaponName="+weaponName, true);
+        xmlhttp7.open("GET","php/showWeaponInfo.php?weaponName="+weaponName, true);
         xmlhttp7.send();
     });
     
@@ -179,11 +188,11 @@ $(document).ready(function() {
             }
         };
         
-        xmlhttp.open("GET","phpIncludes/getMechArmor.php?displayLocation="+displayLocation, true);
+        xmlhttp.open("GET","php/getMechArmor.php?displayLocation="+displayLocation, true);
         xmlhttp.send();
 
         // HAVE TO INCLUDE THIS LINE, SOMETIMES innerHTML DOES NOT REFRESH
-        //$('#head').load("phpIncludes/getMechArmor.php");
+        //$('#head').load("php/getMechArmor.php");
         
     }
 
@@ -206,7 +215,7 @@ $(document).ready(function() {
             }
         }
         
-        xmlhttp2.open("GET","getMechData.php?mechIdPassed="+mechID+"&incArm="+incDec+"&armorLocation="+armorLocation+"&linked="+linked, true);
+        xmlhttp2.open("GET","php/getMechData.php?mechIdPassed="+mechID+"&incArm="+incDec+"&armorLocation="+armorLocation+"&linked="+linked, true);
         xmlhttp2.send();
     }
             
@@ -223,11 +232,11 @@ $(document).ready(function() {
         };
 
         if (updatedEngine === 1) {
-            xmlhttp3.open("GET","phpIncludes/getMechEngineData.php",true);
+            xmlhttp3.open("GET","php/getMechEngineData.php",true);
             xmlhttp3.send();
         }
         else {
-            xmlhttp3.open("GET","phpIncludes/getMechEngineData.php?updatedEngine="+updatedEngine,true);
+            xmlhttp3.open("GET","php/getMechEngineData.php?updatedEngine="+updatedEngine,true);
             xmlhttp3.send();
         }
     }
@@ -256,7 +265,7 @@ $(document).ready(function() {
             }
         };
         
-        xmlhttp6.open("GET","phpIncludes/getMechTonnage.php", true);
+        xmlhttp6.open("GET","php/getMechTonnage.php", true);
         xmlhttp6.send();
     }
     
@@ -305,7 +314,7 @@ $(document).ready(function() {
                 document.getElementById("jumpJetsCriticals").innerHTML = engineDataJSON.jumpJetsCriticals;
             }
         };
-        xmlhttp4.open("GET","phpIncludes/getEngineDataJSON.php",true);
+        xmlhttp4.open("GET","php/getEngineDataJSON.php",true);
         xmlhttp4.send();
 
     }
@@ -426,6 +435,166 @@ $(document).ready(function() {
             }
         };
         
-        xmlhttp.open("GET","phpIncludes/checkLogin.php", true);
+        xmlhttp.open("GET","php/checkLogin.php", true);
         xmlhttp.send();
     }
+
+function updateHeatSinksJSON(changeHeatSink, newHeatSinkNums) {
+
+            if (window.XMLHttpRequest) {    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp5=new XMLHttpRequest();
+                }
+                xmlhttp5.onreadystatechange=function() {
+                if (xmlhttp5.readyState===4 && xmlhttp5.status===200) {
+                    var heatSinkDataJSON = JSON.parse(xmlhttp5.response);
+
+                    var heatSinkTypeOptions = document.createElement("option");
+                        heatSinkTypeOptions.text = heatSinkDataJSON.heatSinkType;
+                        heatSinkTypeOptions.value = heatSinkDataJSON.heatSinkType;
+                        heatSinkTypeOptions.id = heatSinkDataJSON.heatSinkType;
+                        heatSinkTypeOptions.selected = true;
+
+                    var altHeatSinkOption = document.createElement("option");
+                    altHeatSinkOption.id = "altHeatSink";
+
+                    if (heatSinkDataJSON.heatSinkType == "Singles") {
+                        altHeatSinkOption.text = "Doubles";
+                    }
+                    else {
+                        altHeatSinkOption.text = "Singles";
+                    }
+
+                    $('#heatSinkTypeDropDown').find('option').remove().end();
+                    document.getElementById("heatSinkTypeDropDown").appendChild(heatSinkTypeOptions);
+                    document.getElementById("heatSinkTypeDropDown").appendChild(altHeatSinkOption);
+                    document.getElementById("heatDissipation").innerHTML = '&nbsp' + heatSinkDataJSON.heatDissipation;
+
+                    //document.getElementById("heatSinkNumDropDown").option[0].value = '&nbsp' + heatSinkDataJSON.heatDissipation;
+                    //$('#heatSinkNumDropDown').val("val2");
+                    //var e = document.getElementById("heatSinkNumDropDown");
+                    //e.options[e.selectedIndex].value = heatSinkDataJSON.heatSinksNum;
+                    $("#heatSinkNumDropDown").val(heatSinkDataJSON.heatSinksNum);
+                    
+                    updateTonnage();
+                }
+            };
+
+            if ((changeHeatSink == false) || (changeHeatSink == null)) {
+                xmlhttp5.open("GET","php/getHeatSinkDataJSON.php",true);
+            }
+            else if (changeHeatSink == 'changeNum') {
+                xmlhttp5.open("GET","php/getHeatSinkDataJSON.php?newHeatSinkNums="+newHeatSinkNums, true);
+                //prompt(newHeatSinkNums);
+            }
+            else if (changeHeatSink == true) {
+
+                xmlhttp5.open("GET","php/getHeatSinkDataJSON.php?changeHeatSink=true", true);
+            }
+            xmlhttp5.send();
+        }
+        
+        
+        function changeMechTotalTonnage(mechWeight) {
+            
+            if (window.XMLHttpRequest) {    // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp12=new XMLHttpRequest();
+            }
+            
+            xmlhttp12.onreadystatechange=function() {
+                if (xmlhttp12.readyState===4 && xmlhttp12.status===200) {
+                    //document.getElementById('TEST2').innerHTML=xmlhttp12.responseText;
+                    
+                    //updateArmor("mechArmor");
+                    //updateHeatSinksJSON(false);
+                    updateTonnage();
+                    updateEngine(1);
+                    
+                    var docID = 'mechTonnageSelect_' + mechWeight;
+                    document.getElementById(docID).selected = true;
+                }
+            };
+
+            xmlhttp12.open("GET","php/changeMechTotalTonnage.php?tons="+mechWeight, true);
+            xmlhttp12.send();
+        }
+
+
+
+        function updateHeatSinksJSON(changeHeatSink, newHeatSinkNums) {
+
+            if (window.XMLHttpRequest) {    // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp5 = new XMLHttpRequest();
+            }
+            xmlhttp5.onreadystatechange = function () {
+                if (xmlhttp5.readyState === 4 && xmlhttp5.status === 200) {
+                    var heatSinkDataJSON = JSON.parse(xmlhttp5.response);
+
+                    var heatSinkTypeOptions = document.createElement("option");
+                    heatSinkTypeOptions.text = heatSinkDataJSON.heatSinkType;
+                    heatSinkTypeOptions.value = heatSinkDataJSON.heatSinkType;
+                    heatSinkTypeOptions.id = heatSinkDataJSON.heatSinkType;
+                    heatSinkTypeOptions.selected = true;
+
+                    var altHeatSinkOption = document.createElement("option");
+                    altHeatSinkOption.id = "altHeatSink";
+
+                    if (heatSinkDataJSON.heatSinkType == "Singles") {
+                        altHeatSinkOption.text = "Doubles";
+                    }
+                    else {
+                        altHeatSinkOption.text = "Singles";
+                    }
+
+                    $('#heatSinkTypeDropDown').find('option').remove().end();
+                    document.getElementById("heatSinkTypeDropDown").appendChild(heatSinkTypeOptions);
+                    document.getElementById("heatSinkTypeDropDown").appendChild(altHeatSinkOption);
+                    document.getElementById("heatDissipation").innerHTML = '&nbsp' + heatSinkDataJSON.heatDissipation;
+
+                    //document.getElementById("heatSinkNumDropDown").option[0].value = '&nbsp' + heatSinkDataJSON.heatDissipation;
+                    //$('#heatSinkNumDropDown').val("val2");
+                    //var e = document.getElementById("heatSinkNumDropDown");
+                    //e.options[e.selectedIndex].value = heatSinkDataJSON.heatSinksNum;
+                    $("#heatSinkNumDropDown").val(heatSinkDataJSON.heatSinksNum);
+
+                    updateTonnage();
+                }
+            };
+
+            if ((changeHeatSink == false) || (changeHeatSink == null)) {
+                xmlhttp5.open("GET", "php/getHeatSinkDataJSON.php", true);
+            }
+            else if (changeHeatSink == 'changeNum') {
+                xmlhttp5.open("GET", "php/getHeatSinkDataJSON.php?newHeatSinkNums=" + newHeatSinkNums, true);
+                //prompt(newHeatSinkNums);
+            }
+            else if (changeHeatSink == true) {
+
+                xmlhttp5.open("GET", "php/getHeatSinkDataJSON.php?changeHeatSink=true", true);
+            }
+            xmlhttp5.send();
+        }
+
+
+        function changeMechTotalTonnage(mechWeight) {
+
+            if (window.XMLHttpRequest) {    // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp12 = new XMLHttpRequest();
+            }
+
+            xmlhttp12.onreadystatechange = function () {
+                if (xmlhttp12.readyState === 4 && xmlhttp12.status === 200) {
+                    //document.getElementById('TEST2').innerHTML=xmlhttp12.responseText;
+
+                    //updateArmor("mechArmor");
+                    //updateHeatSinksJSON(false);
+                    updateTonnage();
+                    updateEngine(1);
+
+                    var docID = 'mechTonnageSelect_' + mechWeight;
+                    document.getElementById(docID).selected = true;
+                }
+            };
+
+            xmlhttp12.open("GET", "php/changeMechTotalTonnage.php?tons=" + mechWeight, true);
+            xmlhttp12.send();
+        }

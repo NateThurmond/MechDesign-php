@@ -10,7 +10,7 @@
              document.getElementById("mechSelect").innerHTML=xmlhttp.responseText;
            }
          }
-         xmlhttp.open("GET","phpIncludes/pickMechs.php", true);
+         xmlhttp.open("GET","php/pickMechs.php", true);
          xmlhttp.send();
     }
     
@@ -68,7 +68,7 @@
                 makeDroppable();
             }
          }
-         xmlhttpNum.open("GET","phpIncludes/displayCrits.php?mechPart="+mechPart+"&leftRight="+leftRight, true);
+         xmlhttpNum.open("GET","php/displayCrits.php?mechPart="+mechPart+"&leftRight="+leftRight, true);
          xmlhttpNum.send();
     }
     
@@ -96,7 +96,7 @@
                 }
             }
         }
-         xmlhttpNum2.open("GET","phpIncludes/updateCrits.php?mechPart="+mechPart+"&leftRight="+leftRight+"&critToAdd="+critToAdd+"&addRemove="+addRemove, true);
+         xmlhttpNum2.open("GET","php/updateCrits.php?mechPart="+mechPart+"&leftRight="+leftRight+"&critToAdd="+critToAdd+"&addRemove="+addRemove, true);
          xmlhttpNum2.send();
     }
     
@@ -112,34 +112,49 @@
                 updateTonnage();
             }
         }
-         xmlhttpNum3.open("GET","phpIncludes/clearWeaponBlanks.php?mechPart="+mechPart+"&leftRight="+leftRight, true);
+         xmlhttpNum3.open("GET","php/clearWeaponBlanks.php?mechPart="+mechPart+"&leftRight="+leftRight, true);
          xmlhttpNum3.send();
     }
     
 </script>
 
     <div id="login">
-        <?php 
-            if ( !(isset($_SESSION['myusername'])) ) {
-                
-                echo '
-                    <form method="post" name="form1" action="c:\MechDesignConfig\php_Global_Vars_and_DB_Conn.php">
-                        <p><strong>Member Login</strong></p>
 
-                        <input type="text" id="myusername" name="myusername" placeholder="Username" />
-                        <input type="password" id="mypassword" name="mypassword" placeholder="Password"/>
-                        <input type="image" name="Submit" src="images/login2.png" alt="none" style="margin-top: 10px;"/>
-                        <img src="images/register3.png" class="registerButton" alt="none" style="cursor: pointer;"/>
-                    </form>
-                ';                
+        <?php
+        if ($login->isUserLoggedIn() == false) {
+
+            echo '<form method="post" name="form1" action="index.php">
+                    <p><strong>Member Login</strong></p>
+
+                    <input type="text" id="user_name" name="user_name" placeholder="Username" />
+                    <input type="password" id="user_password" name="user_password" placeholder="Password" />
+                    <input type="image" name="login" src="images/login2.png" alt="none" style="margin-top: 10px;" />
+                    <img src="images/register3.png" class="registerButton" alt="none" style="cursor: pointer;" />';
+
+            if (isset($login)) {
+                if ($login->errors) {
+                    foreach ($login->errors as $error) {
+                        echo '<p id="error">' . $error . '</p>';
+                    }
+                }
+                if ($login->messages) {
+                    foreach ($login->messages as $message) {
+                        echo '<p id="error">' . $message . '</p>';
+                    }
+                }
             }
-            else {
-                echo '<p id=welcomeText><strong>Welcome</strong></p>'
-                . '<p id="userNameShowing"><strong>'
-                . $_SESSION['myusername']
-                . '</strong></p>'        
-                . '<br> <div id="logoutButton"> <a href=phpIncludes/Logout.php> <img src="images/logout3.png" /> </a> </div>';
-            }
+            echo '</form>';
+        }
+        else {
+            echo '<p id="welcomeText"><strong>Welcome</strong></p>
+                    <p id="userNameShowing">
+                    <strong>' . $GLOBALS['user_name'] . '</strong>
+                    </p>
+                    <form method="post" name="form2" action="index.php">
+                    <br>
+                    <div id="logoutButton"> <a name="logout" href="index.php?logout"> <img src="images/logout3.png" /> </a> </div>
+                    </form>';
+        }
         ?>
     </div>
     <div id="mechsideBar">

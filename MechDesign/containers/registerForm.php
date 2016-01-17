@@ -15,7 +15,7 @@
                  document.getElementById("registerBox").innerHTML=xmlhttp.responseText;
                }
              }
-             xmlhttp.open("POST","phpIncludes/register.php?name="+newUserName+"&pass="+newRegisterPassword+"&confirmPass="+newConfirmPassword+"&email="+newUserEmail,true);
+             xmlhttp.open("POST","php/register.php?name="+newUserName+"&pass="+newRegisterPassword+"&confirmPass="+newConfirmPassword+"&email="+newUserEmail,true);
              xmlhttp.send();
     }
     

@@ -1,6 +1,10 @@
 <?php
 
-    include("php_Global_Vars_and_DB_Conn.php");
+    require_once("../config/config.php");
+    require_once("../php/sqlPrepare.php");
+
+    session_start();
+    $conn = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME) or die("Error " . mysqli_error($conn));
 
     // I NEED TO CHANGE ALL GET AND POST PHP VARIABLE GETS INTO THIS FORMAT TO PROTECT AGAINST CERTAIN ATTACKS
     $newName = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
@@ -27,24 +31,29 @@
         $passError = "Error, Passwords do not match.";
         $passConfirmError = "";
     }
-    
-    $query = "SELECT * FROM members WHERE username = '$newName'";
-    $isUser = mysqli_query($conn, $query);
-    
-    if (mysqli_num_rows($isUser) > 0) {
+
+    $query = mysqli_prepare($conn, "SELECT * FROM members WHERE username = ? or email = ?");
+    $result_of_login_check = bindFetch($query, [$newName, $newEmail]);
+
+    if (count($result_of_login_check) != 0) {
         $nameError = "There is already a user with that name.";
     }
-    
-    if ( ($nameError == "") && ($passError == "") && ($passConfirmError == "") && (mysqli_num_rows($isUser) == 0) ) {
 
-        $retval = mysqli_query($conn, "INSERT INTO members (`id`, `username`, `password`, `email`) VALUES (NULL, '$newName', '$newPass', '$newEmail')");
-            if(! $retval ) { die('Could not update data: ' . mysqli_error($conn)); }
+    if ( ($nameError == "") && ($passError == "") && ($passConfirmError == "") && (count($result_of_login_check) == 0) ) {
+
+        $newPassHash = password_hash($newPass, PASSWORD_DEFAULT);
+
+        $insertQuery = mysqli_prepare($conn, "INSERT INTO members (`username`, `pwHash`, `email`) VALUES (?, ?, ?)");
+        $result_of_insert_check = bindExecute($insertQuery, [$newName, $newPassHash, $newEmail]);
+
+        //$retval = mysqli_query($conn, "INSERT INTO members (`id`, `username`, `password`, `email`) VALUES (NULL, '$newName', '$newPass', '$newEmail')");
+        if(! $result_of_insert_check ) { die('Could not update data: ' . mysqli_error($conn)); }
             else {
                 echo '
-                    <form method="post" id="registerSuccess" name="form1" action="c:\MechDesignConfig\php_Global_Vars_and_DB_Conn.php">
+                    <form method="post" id="registerSuccess" name="form3" action="index.php">
                     <p>Registration successfull.</p><br>
-                    <input type="hidden" id="myusername" name="myusername" value="'.$newName.'"/>
-                        <input type="hidden" id="mypassword" name="mypassword" value="'.$newPass.'"/>
+                    <input type="hidden" id="myusername" name="user_name" value="'.$newName.'"/>
+                        <input type="hidden" id="mypassword" name="user_password" value="'.$newPass.'"/>
                     <input type="submit" value="Continue"/>
                     </form>
                 ';

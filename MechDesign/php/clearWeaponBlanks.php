@@ -1,6 +1,7 @@
 <?php
 
-    include("php_Global_Vars_and_DB_Conn.php");
+    require_once("../config/config.php");
+    include("../php/DB_Conn.php");
     $mechID = $_SESSION['mechID'];
             
     $mechPart = $_GET['mechPart'];
