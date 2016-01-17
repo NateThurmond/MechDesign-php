@@ -213,3 +213,4 @@ ModelManifest.xml
 
 # Database config file for MechDesign PHP project
 /config
+/MechDesign/config
