@@ -14,6 +14,7 @@ Passionate about the BattleTech Boardgame, I endeavored to make a web based appl
 
 ### Installing
 
+* docker-compose down -v
 * docker compose build
 * docker compose up
 

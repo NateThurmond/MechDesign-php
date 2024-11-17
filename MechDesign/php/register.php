@@ -7,10 +7,10 @@
     $conn = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME) or die("Error " . mysqli_error($conn));
 
     // I NEED TO CHANGE ALL GET AND POST PHP VARIABLE GETS INTO THIS FORMAT TO PROTECT AGAINST CERTAIN ATTACKS
-    $newName = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
-    $newPass = filter_input(INPUT_GET, 'pass', FILTER_SANITIZE_STRING);
-    $newConfirmPass = filter_input(INPUT_GET, 'confirmPass', FILTER_SANITIZE_STRING);
-    $newEmail = filter_input(INPUT_GET, 'email', FILTER_SANITIZE_STRING);
+    $newName = filter_input(INPUT_GET, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $newPass = filter_input(INPUT_GET, 'pass', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $newConfirmPass = filter_input(INPUT_GET, 'confirmPass', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $newEmail = filter_input(INPUT_GET, 'email', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
     if (empty($newName)) {
         $nameError = "Error, name cannot be left blank.";
