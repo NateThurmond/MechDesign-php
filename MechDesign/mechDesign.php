@@ -1,21 +1,21 @@
-<!DOCTYPE html>
-<!--
-Author: Nathan Thurmond
-Date: 9/14/2014
-Site Name: MechDesign
-Description: This is a work in progress that is meant to make it easier to design mechs for Battletech.
--->
-
 <?php
 
-    require_once("config/config.php");
-    include("php/sqlPrepare.php");
-    include("classes/login.php");
+/*
+    Author: Nathan Thurmond
+    Date: 9/14/2014
+    Site Name: MechDesign
+    Description: This is a work in progress that is meant to make it easier to design mechs for Battletech.
+*/
 
-    $login = new Login();
+require_once("config/config.php");
+include("php/sqlPrepare.php");
+include("classes/login.php");
+
+$login = new Login();
+
 ?>
 
-
+<!DOCTYPE html>
 <html>
     <head>
         <title>MechDesign</title>

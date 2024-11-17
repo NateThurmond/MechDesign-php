@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  php-app:
+    image: php:latest  # Pulls the latest PHP version
+    build:
+      context: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./.env:/var/www/.env
+    depends_on:
+      - db  # Ensure MySQL starts before the PHP app
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  db:
+    image: mysql:8.0  # Use MySQL 8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db-init-scripts:/docker-entrypoint-initdb.d  # Seed database
+
+volumes:
+  db_data:

@@ -1,22 +1,23 @@
-<!DOCTYPE html>
-<!--
-Author: Nathan Thurmond
-Date: 7/12/2014
-Site Name: N8Home
-Description: This site is used to edit mechs for the board game battletech. You can customize
-        your mechs according to the introductory rules and then print out the mech sheet
-        or save the mech to your profile.
--->
-
 <?php
 
-    require_once("config/config.php");
-    include("php/sqlPrepare.php");
-    include("classes/login.php");
+/*
+    Author: Nathan Thurmond
+    Date: 7/12/2014
+    Site Name: N8Home
+    Description: This site is used to edit mechs for the board game battletech. You can customize
+    your mechs according to the introductory rules and then print out the mech sheet
+    or save the mech to your profile.
+*/
 
-    $login = new Login();
+require_once("config/config.php");
+include("php/sqlPrepare.php");
+include("classes/login.php");
+
+$login = new Login();
+
 ?>
 
+<!DOCTYPE html>
 <html>
     <head>
         <title>MechDesign</title>
