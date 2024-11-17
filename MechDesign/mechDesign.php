@@ -9,7 +9,6 @@ Description: This is a work in progress that is meant to make it easier to desig
 <?php
 
     require_once("config/config.php");
-    include("php/ChromePhp.php");
     include("php/sqlPrepare.php");
     include("classes/login.php");
 

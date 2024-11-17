@@ -11,7 +11,6 @@ Description: This site is used to edit mechs for the board game battletech. You 
 <?php
 
     require_once("config/config.php");
-    include("php/ChromePhp.php");
     include("php/sqlPrepare.php");
     include("classes/login.php");
 
