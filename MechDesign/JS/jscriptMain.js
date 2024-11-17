@@ -127,6 +127,7 @@ $(document).ready(function () {
             min = "0" + min;
         }
         
+        // TO-DO: at some point save these in DB
         var comments = $('textarea[name=comments]').val();
         $('#commentArea').append('<div class="individualComments">' + m + "-" + n + "-" + y + " at " + 
         h + ":" + min + "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + comments + '</div>');
