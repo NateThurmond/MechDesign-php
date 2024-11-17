@@ -212,5 +212,5 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 # Database config file for MechDesign PHP project
-/config
-/MechDesign/config/config.php
+.env
+vendor/

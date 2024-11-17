@@ -1,0 +1,2 @@
+# .dockerignore
+.env  # Exclude .env from the public directory mount
