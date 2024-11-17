@@ -62,9 +62,9 @@ $login = new Login();
                     <td align="center">
                         <div id="tabDiv">
                             <ul class="ul-2">
-                                <li class="tabLinks" ><a href="http://camospecs.com/" >Camo-Specs</a></li>
-                                <li class="tabLinks" ><a href="http://www.solarisskunkwerks.com/" >Skunk-Werks</a></li>
-                                <li class="tabLinks" ><a href="http://www.battletech.com/" >Battletech.com</a></li>
+                                <li class="tabLinks" ><a href="http://camospecs.com/" target="_blank">Camo-Specs</a></li>
+                                <li class="tabLinks" ><a href="http://www.solarisskunkwerks.com/" target="_blank">Skunk-Werks</a></li>
+                                <li class="tabLinks" ><a href="http://www.battletech.com/" target="_blank">Battletech.com</a></li>
                             </ul>
                         </div>
                     </td>

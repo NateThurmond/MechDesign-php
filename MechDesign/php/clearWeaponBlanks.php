@@ -2,7 +2,7 @@
 
     require_once("../config/config.php");
     include("../php/DB_Conn.php");
-    $mechID = $_SESSION['mechID'];
+    $mechID = $_SESSION['mechID'] ?? 1;
             
     $mechPart = $_GET['mechPart'];
     $leftRight = $_GET['leftRight'];
