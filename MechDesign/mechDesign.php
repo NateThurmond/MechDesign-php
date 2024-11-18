@@ -26,6 +26,7 @@ $login = new Login();
         <link rel='stylesheet' type='text/css' href='CSS/mechArmorDivs.css' />
         <link rel='stylesheet' type='text/css' href='CSS/mechDesignSideBar.css' />
         <link rel='stylesheet' type='text/css' href='CSS/mechWeaponsSideBar.css' />
+        <link rel="icon" href="images/btAtlasSkull.png">
         <script type='text/javascript' src='JS/jquery.js'></script>
         <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
         <script type='text/javascript' src='JS/jscriptMain.js'></script>

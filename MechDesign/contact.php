@@ -22,6 +22,7 @@ $login = new Login();
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <link rel='stylesheet' type='text/css' href='CSS/style.css' />
+        <link rel="icon" href="images/btAtlasSkull.png">
         <script type='text/javascript' src='JS/jquery.js'></script>
         <script type='text/javascript' src='JS/jscriptMain.js'></script>
     </head>
@@ -32,9 +33,7 @@ $login = new Login();
             <table>
                 <tr>
                     <td>
-                        <div class="navButtons highlighted nav0" style="box-shadow: 0 0 8px #FFD700;">
-                            <a href="#" style="text-decoration: none; color: white; "> Home </a>
-                        </div>
+                        <div class="navButtons highlighted nav0"><a class="navBarLink" href="index.php"> Home </a> </div>
                     </td>
                     <td>
                         <div class="navButtons highlighted nav1"><a class="navBarLink" href="mechDesign.php">Mech Design <img src="images/arrowSmall.png" alt="none"/> </a> </div>
@@ -43,7 +42,9 @@ $login = new Login();
                         <div class="navButtons highlighted nav2"> Resources <img src="images/arrowSmall.png" alt="none"/></div>
                     </td>
                     <td>
-                        <div class="navButtons highlighted nav4"><a class="navBarLink" href="contact.php"> Contact </a></div>
+                        <div class="navButtons highlighted nav3" style="box-shadow: 0 0 8px #FFD700;">
+                            <a href="#" style="text-decoration: none; color: white; "> Contact </a>
+                        </div>
                     </td>
                 </tr>
                 <tr>

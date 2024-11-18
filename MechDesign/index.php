@@ -24,6 +24,7 @@ $login = new Login();
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <link rel='stylesheet' type='text/css' href='CSS/style.css' />
+        <link rel="icon" href="images/btAtlasSkull.png">
         <script type='text/javascript' src='JS/jquery.js'></script>
         <script type='text/javascript' src='JS/jscriptMain.js'></script>
     </head>
