@@ -108,9 +108,9 @@ $login = new Login();
                         
                         <h4>Historical Data</h4>
                         <div class="detailsTextDisplay" id="mechDetails1">
-                            <p><strong>Era: </strong></p>
-                            <p><strong>Tech Base: </strong></p>
-                            <p><strong>Production Year: </strong></p>
+                            <p><strong id="indMechEra">Era: </strong></p>
+                            <p><strong id="indMechTechBase">Tech Base: </strong></p>
+                            <p><strong id="indMechProdYear">Production Year: </strong></p>
                         </div>
                         
                         <h4>Engine Details</h4>

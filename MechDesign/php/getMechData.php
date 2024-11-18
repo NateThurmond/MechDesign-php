@@ -1,6 +1,6 @@
 <?php
 
-require_once("config/config.php");
+require_once("../config/config.php");
 include("php/DB_Conn.php");
 
     $incArm = $_GET['incArm'];

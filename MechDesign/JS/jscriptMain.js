@@ -1,3 +1,25 @@
+// Extract `mechIDPassed` from the current page's URL
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Store the `mechIDPassed` parameter from the page URL
+const mechIDPassed = getQueryParam('mechIDPassed');
+
+// Override the XMLHttpRequest `open` method to always pass our mechID
+(function() {
+    const originalOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+        if (mechIDPassed) {
+            // Append `mechIDPassed` to the request URL
+            const separator = url.includes('?') ? '&' : '?';
+            url = `${url}${separator}mechIDPassed=${mechIDPassed}`;
+        }
+        // Call the original `open` method with the modified URL
+        originalOpen.call(this, method, url, async, user, password);
+    };
+})();
 
 $(document).ready(function () {
 

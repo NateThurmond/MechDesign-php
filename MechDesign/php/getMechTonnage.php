@@ -4,7 +4,7 @@
     require_once("../config/config.php");
     include("../php/DB_Conn.php");
 
-    $mechID = $_SESSION['mechID'] ?? 1;
+    $mechID = filter_input(INPUT_GET, 'mechIDPassed', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 1;
     
     $queryInternalWeight = "SELECT * FROM mechinternals WHERE mechID = $mechID";
     $queryArmorWeight = "SELECT * FROM mechexternalarmor WHERE mechID = $mechID";

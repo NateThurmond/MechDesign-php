@@ -16,6 +16,7 @@ $(document).ready(function () {
     updateArmor("mechArmor");
     updateHeatSinksJSON(false);
     updateTonnage();
+    updateMechMeta();
     updateEngine(1);
     
     function displayAllCrits() {
@@ -268,8 +269,28 @@ $(document).ready(function () {
         xmlhttp6.open("GET","php/getMechTonnage.php", true);
         xmlhttp6.send();
     }
-    
-    
+
+
+    function updateMechMeta() {
+        if (window.XMLHttpRequest) {
+            xmlhttp166=new XMLHttpRequest();
+        }
+        xmlhttp166.onreadystatechange=function() {
+            if (xmlhttp166.readyState===4 && xmlhttp166.status===200) {
+                var mechMetaResponse = JSON.parse(xmlhttp166.response);
+                $('input[name="mechName"]').val(mechMetaResponse.mechName);
+                $('input[name="mechModel"]').val(mechMetaResponse.mechModel);
+                $('#indMechEra').html(`Era: ${mechMetaResponse.era}`);
+                $('#indMechTechBase').html(`Tech Base: ${mechMetaResponse.techBase}`);
+                $('#indMechProdYear').html(`Production Year: ${mechMetaResponse.productionYear}`);
+            }
+        };
+
+        xmlhttp166.open("GET","php/getMechMeta.php", true);
+        xmlhttp166.send();
+    }
+
+
    function updateEngineTonnageJSON() {
 
         var myArr;
@@ -413,30 +434,6 @@ $(document).ready(function() {
         }
 
         });
-    }
-    
-    
-    function checkLogin() {
-
-        if (window.XMLHttpRequest) {    // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp=new XMLHttpRequest();
-        }
-        xmlhttp.onreadystatechange=function() {
-            if (xmlhttp.readyState===4 && xmlhttp.status===200) {
-                document.getElementById('TEST2').innerHTML=xmlhttp.responseText;
-                var userLoggedIn = xmlhttp.responseText;
-                
-                if (userLoggedIn == 'N/A') {
-                    return "false";
-                }
-                else {
-                    return "true";
-                }
-            }
-        };
-        
-        xmlhttp.open("GET","php/checkLogin.php", true);
-        xmlhttp.send();
     }
 
 function updateHeatSinksJSON(changeHeatSink, newHeatSinkNums) {
