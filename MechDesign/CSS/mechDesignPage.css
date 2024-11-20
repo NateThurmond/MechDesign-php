@@ -1,10 +1,17 @@
-
 /* Change the color of the placeholders in the text input box. This is important because
 the data that is displayed for each mech is also editable */
-::-webkit-input-placeholder { color: black; } /* WebKit browsers */
-:-moz-placeholder { color: black; } /* Mozilla Firefox 4 to 18 */
-::-moz-placeholder { color: black; } /* Mozilla Firefox 19+ */
-:-ms-input-placeholder { color:    black; } /* Internet Explorer 10+ */
+::-webkit-input-placeholder {
+    color: black;
+} /* WebKit browsers */
+:-moz-placeholder {
+    color: black;
+} /* Mozilla Firefox 4 to 18 */
+::-moz-placeholder {
+    color: black;
+} /* Mozilla Firefox 19+ */
+:-ms-input-placeholder {
+    color: black;
+} /* Internet Explorer 10+ */
 
 /* Chrome does not clear out the placeholder when clicking on an input box.
 This is a work-around for Chrome to clear the input placeholder value when you click
@@ -16,16 +23,20 @@ input:focus::-webkit-input-placeholder {
 #mechHeader {
     display: inline-block;
     vertical-align: top;
-    width: 320px;
+    width: 315px;
     margin-right: 5px;
     padding: 5px;
-    background: linear-gradient(to right, #79796B, #ADAD99); /* WILL TAKE OUT LATER */
+    background: linear-gradient(
+        to right,
+        #79796b,
+        #adad99
+    ); /* WILL TAKE OUT LATER */
     height: 650px;
 }
 
 #mechHeaderLeftCol {
     display: inline-block;
-    vertical-align:top;
+    vertical-align: top;
     width: 153px;
     height: 138px;
     font-family: Verdana, Geneva, Arial, sans-serif;
@@ -47,8 +58,8 @@ h4 {
 
 #mechNameBox {
     display: block;
-    margin: 0 auto; 
-    width: 80px; 
+    margin: 0 auto;
+    width: 80px;
     height: 8px;
     border-radius: 3px;
 }
@@ -73,7 +84,7 @@ h4 {
     vertical-align: top;
     width: 150px;
     height: 33px;
-    background-color: #3E4146;
+    background-color: #3e4146;
     border: 2px solid black;
     margin-top: 5px;
 }
@@ -87,7 +98,7 @@ h4 {
     height: 38px;
 }
 
-#mechDetails1 p{
+#mechDetails1 p {
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
 }
@@ -95,7 +106,7 @@ h4 {
 #mechDetails {
     margin-left: 1px;
     width: 152px;
-    height: 201px; 
+    height: 201px;
     text-align: center;
 }
 
@@ -136,14 +147,14 @@ h4 {
     display: inline-block;
     text-align: center;
     margin-left: 7px;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .downMovementArrow {
     display: inline-block;
     text-align: center;
     margin-left: 3px;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .movementValues {
@@ -164,7 +175,7 @@ h4 {
     height: 12px;
     margin-top: 0px;
     margin-left: 1px;
-    width: 150px;
+    width: 146px;
 }
 
 #heatSinkDiv {
@@ -175,7 +186,7 @@ h4 {
 
 #heatSinkContainer {
     border: 2px solid black;
-    background-color: #3E4146;
+    background-color: #3e4146;
     margin-top: 6px;
     display: inline-block;
     width: 151px;
@@ -199,7 +210,7 @@ h4 {
 }
 
 #internalsCriticalsContainer {
-    background-color: #3E4146;
+    background-color: #3e4146;
     border: 2px solid black;
     margin-top: 6px;
     display: inline-block;
@@ -222,7 +233,9 @@ h4 {
 }
 
 .submitChanges {
-    display: block; margin : 0 auto; margin-top: 8px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 8px;
 }
 
 #checkRegister {

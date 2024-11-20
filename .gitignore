@@ -214,3 +214,6 @@ ModelManifest.xml
 # Database config file for MechDesign PHP project
 .env
 vendor/
+
+# Mac finder index
+**/.DS_Store

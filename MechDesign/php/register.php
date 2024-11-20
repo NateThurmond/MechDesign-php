@@ -3,7 +3,6 @@
     require_once("../config/config.php");
     require_once("../php/sqlPrepare.php");
 
-    session_start();
     $conn = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME) or die("Error " . mysqli_error($conn));
 
     // I NEED TO CHANGE ALL GET AND POST PHP VARIABLE GETS INTO THIS FORMAT TO PROTECT AGAINST CERTAIN ATTACKS

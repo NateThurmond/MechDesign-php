@@ -26,6 +26,7 @@ $login = new Login();
         <link rel='stylesheet' type='text/css' href='CSS/mechArmorDivs.css' />
         <link rel='stylesheet' type='text/css' href='CSS/mechDesignSideBar.css' />
         <link rel='stylesheet' type='text/css' href='CSS/mechWeaponsSideBar.css' />
+        <link rel="icon" href="images/btAtlasSkull.png">
         <script type='text/javascript' src='JS/jquery.js'></script>
         <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
         <script type='text/javascript' src='JS/jscriptMain.js'></script>
@@ -68,9 +69,9 @@ $login = new Login();
                     <td align="center">
                         <div id="tabDiv">
                             <ul class="ul-2">
-                                <li class="tabLinks" ><a href="http://camospecs.com/" >Camo-Specs</a></li>
-                                <li class="tabLinks" ><a href="http://www.solarisskunkwerks.com/" >Skunk-Werks</a></li>
-                                <li class="tabLinks" ><a href="http://www.battletech.com/" >Battletech.com</a></li>
+                                <li class="tabLinks" ><a href="http://camospecs.com/" target="_blank">Camo-Specs</a></li>
+                                <li class="tabLinks" ><a href="http://www.solarisskunkwerks.com/" target="_blank">Skunk-Werks</a></li>
+                                <li class="tabLinks" ><a href="http://www.battletech.com/" target="_blank">Battletech.com</a></li>
                             </ul>
                         </div>
                     </td>
@@ -107,9 +108,9 @@ $login = new Login();
                         
                         <h4>Historical Data</h4>
                         <div class="detailsTextDisplay" id="mechDetails1">
-                            <p><strong>Era: </strong></p>
-                            <p><strong>Tech Base: </strong></p>
-                            <p><strong>Production Year: </strong></p>
+                            <p><strong id="indMechEra">Era: </strong></p>
+                            <p><strong id="indMechTechBase">Tech Base: </strong></p>
+                            <p><strong id="indMechProdYear">Production Year: </strong></p>
                         </div>
                         
                         <h4>Engine Details</h4>
@@ -126,7 +127,10 @@ $login = new Login();
                         <h4>Heat Sinks</h4>
                         <div class="detailsTextDisplay" id="heatSinkContainer">
                             <p style="display: inline-block;">Heat Sink Type:</p>
-                            <select class="dropDownSelectors" id="heatSinkTypeDropDown" name="heatSinkTypeDropDown" onchange="updateHeatSinksJSON(true)"></select>
+                            <select class="dropDownSelectors" id="heatSinkTypeDropDown" name="heatSinkTypeDropDown" onchange="updateHeatSinksJSON(true)">
+                                <option>Singles</option>
+                                <option>Doubles</option>
+                            </select>
                             <p style="display: inline-block;">Heat Sinks Total:</p>
                             <select class="dropDownSelectors" id="heatSinkNumDropDown" name="heatSinkNumDropDown" onchange="updateHeatSinksJSON('changeNum', this.value)">
                             </select>
