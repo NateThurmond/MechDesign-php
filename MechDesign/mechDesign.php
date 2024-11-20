@@ -127,7 +127,10 @@ $login = new Login();
                         <h4>Heat Sinks</h4>
                         <div class="detailsTextDisplay" id="heatSinkContainer">
                             <p style="display: inline-block;">Heat Sink Type:</p>
-                            <select class="dropDownSelectors" id="heatSinkTypeDropDown" name="heatSinkTypeDropDown" onchange="updateHeatSinksJSON(true)"></select>
+                            <select class="dropDownSelectors" id="heatSinkTypeDropDown" name="heatSinkTypeDropDown" onchange="updateHeatSinksJSON(true)">
+                                <option>Singles</option>
+                                <option>Doubles</option>
+                            </select>
                             <p style="display: inline-block;">Heat Sinks Total:</p>
                             <select class="dropDownSelectors" id="heatSinkNumDropDown" name="heatSinkNumDropDown" onchange="updateHeatSinksJSON('changeNum', this.value)">
                             </select>

@@ -1,4 +1,8 @@
+var getFullMechData; // FN to return full mech data
+var fullMechData = {}; // Returned from db on page load from above fn
+
 $(document).ready(function () {
+    // Build out heatsink options for our dropdown for this
     var heatSinkNumOptions2 = [];
     for (var i = 10; i <= 65; i++) {
         heatSinkNumOptions2[i] = document.createElement("option");
@@ -10,11 +14,321 @@ $(document).ready(function () {
             .appendChild(heatSinkNumOptions2[i]);
     }
 
+    // FUNCTION TO DISPLAY ARMOR POINTS DYNAMICALLY AND EVENLY ACROSS MULTIPLE ROWS
+    function armorDisplayCircles(classToMod, idToMod, armorCircles, divLines) {
+        const container = document.createElement("div");
+        container.className = classToMod;
+        container.id = idToMod;
+
+        let divCounter = 0;
+        for (let count = 0; count < armorCircles; count++) {
+            const circle = document.createElement("p");
+            circle.className = "circle";
+            container.appendChild(circle);
+            divCounter++;
+            if (divCounter % divLines === 0) {
+                container.appendChild(document.createElement("br"));
+            }
+        }
+        return container;
+    }
+
+    // FUNCTION TO DISPLAY ARMOR VALUES (External armor that is)
+    function displayArmorSection(displayLocale, mechData) {
+        mechData = mechData;
+        const mechArmorContainer = document.getElementById("mechArmor");
+        $(mechArmorContainer).empty();
+
+        // Add arm armor
+        const armorCirclesLeftArm = parseInt(
+            mechData.mechexternalarmor_armLeftArmor
+        );
+        const armorCirclesRightArm = parseInt(
+            mechData.mechexternalarmor_armRightArmor
+        );
+        const numDivsLeftArm = Math.ceil(armorCirclesLeftArm / 10);
+        const numDivsRightArm = Math.ceil(armorCirclesRightArm / 10);
+
+        const armContainer = document.createElement("div");
+        armContainer.id = "arm";
+
+        armContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "leftArmArmor",
+                armorCirclesLeftArm,
+                numDivsLeftArm
+            )
+        );
+        armContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "rightArmArmor",
+                armorCirclesRightArm,
+                numDivsRightArm
+            )
+        );
+
+        armContainer.innerHTML += `
+            <div id="leftArmArmorNumeric"><p>${armorCirclesLeftArm}</p></div>
+            <div id="rightArmArmorNumeric"><p>${armorCirclesRightArm}</p></div>
+        `;
+        mechArmorContainer.appendChild(armContainer);
+
+        // Add head armor
+        const armorCirclesHead = parseInt(mechData.mechexternalarmor_headArmor);
+        const numDivsHead = Math.ceil(armorCirclesHead / 3);
+
+        const headContainer = document.createElement("div");
+        headContainer.id = "head";
+
+        headContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "mechHeadArmor",
+                armorCirclesHead,
+                numDivsHead
+            )
+        );
+        headContainer.innerHTML += `<div id="mechHeadArmorNumeric"><p>${armorCirclesHead}</p></div>`;
+        mechArmorContainer.appendChild(headContainer);
+
+        // Add center armor
+        const armorCirclesCenter = parseInt(
+            mechData.mechexternalarmor_centerArmor
+        );
+        const armorCirclesRearCenter = parseInt(
+            mechData.mechexternalarmor_rearCenterArmor
+        );
+        const numDivsCenter = Math.ceil(armorCirclesCenter / 9);
+        const numDivsRearCenter = Math.ceil(armorCirclesRearCenter / 9);
+
+        const centerContainer = document.createElement("div");
+        centerContainer.id = "center";
+
+        centerContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "centerArmor",
+                armorCirclesCenter,
+                numDivsCenter
+            )
+        );
+        centerContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "centerRearArmor",
+                armorCirclesRearCenter,
+                numDivsRearCenter
+            )
+        );
+
+        centerContainer.innerHTML += `
+            <div id="centerArmorNumeric"><p>${armorCirclesCenter}</p></div>
+            <div id="centerRearArmorNumeric"><p>${armorCirclesRearCenter}</p></div>
+        `;
+        mechArmorContainer.appendChild(centerContainer);
+
+        // Torsor Armor
+        const armorCirclesLeftTorso = parseInt(
+            mechData.mechexternalarmor_torsoLeftArmor
+        );
+        const armorCirclesRightTorso = parseInt(
+            mechData.mechexternalarmor_torsoRightArmor
+        );
+        const armorCirclesLeftRear = parseInt(
+            mechData.mechexternalarmor_rearLeftTorsoArmor
+        );
+        const armorCirclesRightRear = parseInt(
+            mechData.mechexternalarmor_rearRightTorsoArmor
+        );
+
+        const armorTorsoLeftTop = Math.round(armorCirclesLeftTorso * 0.57);
+        const numDivsTorsoLeftTop = Math.ceil(armorTorsoLeftTop / 4);
+        const armorTorsoRightTop = Math.round(armorCirclesRightTorso * 0.57);
+        const numDivsTorsoRightTop = Math.ceil(armorTorsoRightTop / 4);
+        const armorTorsoLeftBottom = Math.round(armorCirclesLeftTorso * 0.285);
+        const numDivsTorsoLeftBottom = Math.ceil(armorTorsoLeftBottom / 2);
+        const armorTorsoRightBottom = Math.round(
+            armorCirclesRightTorso * 0.285
+        );
+        const numDivsTorsoRightBottom = Math.ceil(armorTorsoRightBottom / 2);
+        const armorTorsoLeftMiddle =
+            armorCirclesLeftTorso - (armorTorsoLeftTop + armorTorsoLeftBottom);
+        const numDivsTorsoLeftMiddle = Math.ceil(armorTorsoLeftMiddle / 3);
+        const armorTorsoRightMiddle =
+            armorCirclesRightTorso -
+            (armorTorsoRightTop + armorTorsoRightBottom);
+        const numDivsTorsoRightMiddle = Math.ceil(armorTorsoRightMiddle / 3);
+        const numDivsTorsoLeftRear = Math.ceil(armorCirclesLeftRear / 4);
+        const numDivsTorsoRightRear = Math.ceil(armorCirclesRightRear / 4);
+
+        const torsoContainer = document.createElement("div");
+        torsoContainer.id = "torso";
+
+        torsoContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "leftTorsoArmorTop",
+                armorTorsoLeftTop,
+                numDivsTorsoLeftTop
+            )
+        );
+        torsoContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "leftTorsoArmorMiddle",
+                armorTorsoLeftMiddle,
+                numDivsTorsoLeftMiddle
+            )
+        );
+        torsoContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "leftTorsoArmorBottom",
+                armorTorsoLeftBottom,
+                numDivsTorsoLeftBottom
+            )
+        );
+
+        torsoContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "rightTorsoArmorTop",
+                armorTorsoRightTop,
+                numDivsTorsoRightTop
+            )
+        );
+        torsoContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "rightTorsoArmorMiddle",
+                armorTorsoRightMiddle,
+                numDivsTorsoRightMiddle
+            )
+        );
+        torsoContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "rightTorsoArmorBottom",
+                armorTorsoRightBottom,
+                numDivsTorsoRightBottom
+            )
+        );
+
+        torsoContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "leftRearTorsoArmor",
+                armorCirclesLeftRear,
+                numDivsTorsoLeftRear
+            )
+        );
+        torsoContainer.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "rightRearTorsoArmor",
+                armorCirclesRightRear,
+                numDivsTorsoRightRear
+            )
+        );
+
+        torsoContainer.innerHTML += `
+            <div id="leftTorsoArmorNumeric">${armorCirclesLeftTorso}</div>
+            <div id="rightTorsoArmorNumeric">${armorCirclesRightTorso}</div>
+            <div id="leftRearTorsoArmorNumeric">${armorCirclesLeftRear}</div>
+            <div id="rightRearTorsoArmorNumeric">${armorCirclesRightRear}</div>
+        `;
+        mechArmorContainer.appendChild(torsoContainer);
+
+        // And finally leg armor
+        const armorCirclesLeftLeg = mechData.mechexternalarmor_legLeftArmor;
+        const armorCirclesRightLeg = mechData.mechexternalarmor_legRightArmor;
+
+        const numDivsLeftLeg = Math.ceil(armorCirclesLeftLeg / 12);
+        const numDivsRightLeg = Math.ceil(armorCirclesRightLeg / 12);
+
+        const legSection = document.createElement("div");
+        legSection.id = "leg";
+
+        // Left Leg Armor
+        legSection.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "leftLegArmor",
+                armorCirclesLeftLeg,
+                numDivsLeftLeg
+            )
+        );
+
+        // Right Leg Armor
+        legSection.appendChild(
+            armorDisplayCircles(
+                "armorDisplayLayout",
+                "rightLegArmor",
+                armorCirclesRightLeg,
+                numDivsRightLeg
+            )
+        );
+
+        // Numeric Values for Left and Right Leg
+        const leftLegNumeric = document.createElement("div");
+        leftLegNumeric.id = "leftLegArmorNumeric";
+        leftLegNumeric.textContent = armorCirclesLeftLeg;
+        legSection.appendChild(leftLegNumeric);
+
+        const rightLegNumeric = document.createElement("div");
+        rightLegNumeric.id = "rightLegArmorNumeric";
+        rightLegNumeric.textContent = armorCirclesRightLeg;
+        legSection.appendChild(rightLegNumeric);
+
+        // Append the leg section to the parent container
+        mechArmorContainer.appendChild(legSection);
+    }
+
+    // Method to update the heat sink/type/dissipation data
+    function updateHeatSinksJSON(
+        swapHeatSyncType = false,
+        newHeatSyncNum = -1
+    ) {
+        if (swapHeatSyncType === true) {
+            fullMechData.mechinternals_heatSinkType =
+                fullMechData.mechinternals_heatSinkType === "Singles"
+                    ? "Doubles"
+                    : "Singles";
+        }
+        if (newHeatSyncNum !== -1) {
+            fullMechData.mechinternals_heatSinksNum = newHeatSyncNum;
+        }
+
+        $("#heatSinkTypeDropDown").val(fullMechData.mechinternals_heatSinkType);
+        $("#heatSinkNumDropDown").val(fullMechData.mechinternals_heatSinksNum);
+        let heatSinkMulti =
+            $("#heatSinkTypeDropDown").val() === "Singles" ? 1 : 2;
+        $("#heatDissipation").html(
+            heatSinkMulti * parseInt($("#heatSinkNumDropDown").val(), 10)
+        );
+        updateTonnage();
+    }
+
+    // FN to get all data for the mech in one call
+    getFullMechData = function () {
+        // Get all data representing the full mech
+        $.getJSON("php/getFullMechDetails.php", function (mechData) {
+            fullMechData = mechData; // Set globally
+            console.log(mechData);
+
+            // Proceed to build out the views
+            displayArmorSection("mechArmor", mechData);
+            updateHeatSinksJSON();
+        });
+    };
+    getFullMechData(); // Called on page load
+
     /* These calls retrieve the initial values for Armor and engine for the mechs on page load.
        passing 1 to updateEngine() tells it that we are not updating the engine type.
     */
-    updateArmor("mechArmor");
-    updateHeatSinksJSON(false);
+    // updateArmor("mechArmor");
     updateTonnage();
     updateMechMeta();
     updateEngine(1);
@@ -188,32 +502,7 @@ $(document).ready(function () {
 });
 
 function updateArmor(displayLocation) {
-    /*if (displayLocation == "arm") {
-        alert("click");
-    }*/
-
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-    }
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-            //alert(xmlhttp.responseText); // Error Checking, shows what will be displayed as html.
-            document.getElementById(displayLocation).innerHTML =
-                xmlhttp.responseText;
-            //alert(xmlhttp.responseText);
-        }
-    };
-
-    xmlhttp.open(
-        "GET",
-        "php/getMechArmor.php?displayLocation=" + displayLocation,
-        true
-    );
-    xmlhttp.send();
-
-    // HAVE TO INCLUDE THIS LINE, SOMETIMES innerHTML DOES NOT REFRESH
-    //$('#head').load("php/getMechArmor.php");
+    getFullMechData();
 }
 
 function changeMechStats(mechID, armorLocation, incDec, armorUpdateID) {
@@ -230,7 +519,7 @@ function changeMechStats(mechID, armorLocation, incDec, armorUpdateID) {
     xmlhttp2.onreadystatechange = function () {
         if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
             //document.getElementById("test2").innerHTML=xmlhttp2.responseText;
-            updateArmor(armorUpdateID);
+            // updateArmor(armorUpdateID);
             updateTonnage();
         }
     };
@@ -531,69 +820,6 @@ function makeDroppable() {
     });
 }
 
-function updateHeatSinksJSON(changeHeatSink, newHeatSinkNums) {
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp5 = new XMLHttpRequest();
-    }
-    xmlhttp5.onreadystatechange = function () {
-        if (xmlhttp5.readyState === 4 && xmlhttp5.status === 200) {
-            var heatSinkDataJSON = JSON.parse(xmlhttp5.response);
-
-            var heatSinkTypeOptions = document.createElement("option");
-            heatSinkTypeOptions.text = heatSinkDataJSON.heatSinkType;
-            heatSinkTypeOptions.value = heatSinkDataJSON.heatSinkType;
-            heatSinkTypeOptions.id = heatSinkDataJSON.heatSinkType;
-            heatSinkTypeOptions.selected = true;
-
-            var altHeatSinkOption = document.createElement("option");
-            altHeatSinkOption.id = "altHeatSink";
-
-            if (heatSinkDataJSON.heatSinkType == "Singles") {
-                altHeatSinkOption.text = "Doubles";
-            } else {
-                altHeatSinkOption.text = "Singles";
-            }
-
-            $("#heatSinkTypeDropDown").find("option").remove().end();
-            document
-                .getElementById("heatSinkTypeDropDown")
-                .appendChild(heatSinkTypeOptions);
-            document
-                .getElementById("heatSinkTypeDropDown")
-                .appendChild(altHeatSinkOption);
-            document.getElementById("heatDissipation").innerHTML =
-                "&nbsp" + heatSinkDataJSON.heatDissipation;
-
-            //document.getElementById("heatSinkNumDropDown").option[0].value = '&nbsp' + heatSinkDataJSON.heatDissipation;
-            //$('#heatSinkNumDropDown').val("val2");
-            //var e = document.getElementById("heatSinkNumDropDown");
-            //e.options[e.selectedIndex].value = heatSinkDataJSON.heatSinksNum;
-            $("#heatSinkNumDropDown").val(heatSinkDataJSON.heatSinksNum);
-
-            updateTonnage();
-        }
-    };
-
-    if (changeHeatSink == false || changeHeatSink == null) {
-        xmlhttp5.open("GET", "php/getHeatSinkDataJSON.php", true);
-    } else if (changeHeatSink == "changeNum") {
-        xmlhttp5.open(
-            "GET",
-            "php/getHeatSinkDataJSON.php?newHeatSinkNums=" + newHeatSinkNums,
-            true
-        );
-        //prompt(newHeatSinkNums);
-    } else if (changeHeatSink == true) {
-        xmlhttp5.open(
-            "GET",
-            "php/getHeatSinkDataJSON.php?changeHeatSink=true",
-            true
-        );
-    }
-    xmlhttp5.send();
-}
-
 function changeMechTotalTonnage(mechWeight) {
     if (window.XMLHttpRequest) {
         // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -605,7 +831,6 @@ function changeMechTotalTonnage(mechWeight) {
             //document.getElementById('TEST2').innerHTML=xmlhttp12.responseText;
 
             //updateArmor("mechArmor");
-            //updateHeatSinksJSON(false);
             updateTonnage();
             updateEngine(1);
 
