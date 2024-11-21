@@ -161,38 +161,38 @@
         <p class='selector' id='armorSelector' >Armor</p>
         <div class='popoutClass popoutTab2'>Increase External Armor
             <hr class='dividerBar' style="margin-top: -2px;"/>
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftTorsoInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'torsoLeftArmor', 'increase', 'torso');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftTorsoDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'torsoLeftArmor', 'decrease', 'torso');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftTorsoInc" onclick="changeMechStats('torsoLeftArmor', 'increase', 'torso');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftTorsoDec" onclick="changeMechStats('torsoLeftArmor', 'decrease', 'torso');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="RightTorsoInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'torsoRightArmor', 'increase', 'torso');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="RightTorsoDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'torsoRightArmor', 'decrease', 'torso');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="RightTorsoInc" onclick="changeMechStats('torsoRightArmor', 'increase', 'torso');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="RightTorsoDec" onclick="changeMechStats('torsoRightArmor', 'decrease', 'torso');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftRearTorsoInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'rearLeftTorsoArmor', 'increase', 'torso');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftRearTorsoDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'rearLeftTorsoArmor', 'decrease', 'torso');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftRearTorsoInc" onclick="changeMechStats('rearLeftTorsoArmor', 'increase', 'torso');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftRearTorsoDec" onclick="changeMechStats('rearLeftTorsoArmor', 'decrease', 'torso');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="RightRearTorsoInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'rearRightTorsoArmor', 'increase', 'torso');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="RightRearTorsoDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'rearRightTorsoArmor', 'decrease', 'torso');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="RightRearTorsoInc" onclick="changeMechStats('rearRightTorsoArmor', 'increase', 'torso');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="RightRearTorsoDec" onclick="changeMechStats('rearRightTorsoArmor', 'decrease', 'torso');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="centerRearTorsoInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'rearCenterArmor', 'increase', 'center');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="centerRearTorsoDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'rearCenterArmor', 'decrease', 'center');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="centerRearTorsoInc" onclick="changeMechStats('rearCenterArmor', 'increase', 'center');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="centerRearTorsoDec" onclick="changeMechStats('rearCenterArmor', 'decrease', 'center');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="RightLegInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'legRightArmor', 'increase', 'leg');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="RightLegDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'legRightArmor', 'decrease', 'leg');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="RightLegInc" onclick="changeMechStats('legRightArmor', 'increase', 'leg');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="RightLegDec" onclick="changeMechStats('legRightArmor', 'decrease', 'leg');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftLegInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'legLeftArmor', 'increase', 'leg');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftLegDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'legLeftArmor', 'decrease', 'leg');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftLegInc" onclick="changeMechStats('legLeftArmor', 'increase', 'leg');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftLegDec" onclick="changeMechStats('legLeftArmor', 'decrease', 'leg');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="centerTorsoInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'centerArmor', 'increase', 'center');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="centerTorsoDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'centerArmor', 'decrease', 'center');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="centerTorsoInc" onclick="changeMechStats('centerArmor', 'increase', 'center');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="centerTorsoDec" onclick="changeMechStats('centerArmor', 'decrease', 'center');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="headInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'headArmor', 'increase', 'head');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="headDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'headArmor', 'decrease', 'head');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="headInc" onclick="changeMechStats('headArmor', 'increase', 'head');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="headDec" onclick="changeMechStats('headArmor', 'decrease', 'head');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftArmInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'armLeftArmor', 'increase', 'arm');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftArmDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'armLeftArmor', 'decrease', 'arm');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftArmInc" onclick="changeMechStats('armLeftArmor', 'increase', 'arm');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftArmDec" onclick="changeMechStats('armLeftArmor', 'decrease', 'arm');"/>
             
-            <img src="images/upRedArrow.png" class="downMovementArrow" id="RightArmInc" onclick="changeMechStats(<?php echo $MechID; ?>, 'armRightArmor', 'increase', 'arm');"/>
-            <img src="images/downRedArrow.png" class="downMovementArrow" id="RightArmDec" onclick="changeMechStats(<?php echo $MechID; ?>, 'armRightArmor', 'decrease', 'arm');"/>
+            <img src="images/upRedArrow.png" class="downMovementArrow" id="RightArmInc" onclick="changeMechStats('armRightArmor', 'increase', 'arm');"/>
+            <img src="images/downRedArrow.png" class="downMovementArrow" id="RightArmDec" onclick="changeMechStats('armRightArmor', 'decrease', 'arm');"/>
             
             <h4><input type="checkbox" id="mirrorArmorBox" name="mirrorArmorBox" checked>Link armor locations</h4>
             <h4><p id="totalWeightArmorPage" style="font-weight: normal; margin-top: 9px;"></p></h4>
@@ -316,32 +316,3 @@
         </div>
         
     </div>
-
-
-
-<!-- THIS CODE is for a static button that loads the grid of all mechs available.
-I may re-add this grid back in later. For now the gris is loaded with the mechSelectot button-->
-<?php 
-/*
-    // THIS IS THE PHP DATABASE ACCESS CODE AT BEGINNING OF THE PAGE
-    $result2 = mysqli_query($conn, "SELECT * FROM mechs");
-    
-    $arrayIndex = 0;
-    $mechNameDisplay = array();
-    while($row = mysqli_fetch_array($result2)) {
-    
-        $mechNameDisplay[$arrayIndex] = $row['mechName']; 
-        $mechArmorDisplay[$arrayIndex] = $row['armor'];
-        $arrayIndex++;
-    }
- 
- 
-    // THIS IS THE BUTTON  - THE CODE BELOW WOULD BE IN THE HTML
-    for ($arrayCounter=0; $arrayCounter < sizeof($mechNameDisplay); $arrayCounter++) {                                
-        echo "<tr> 
-            <td> <a href='mechDesign.php?mechIDPassed=$arrayCounter'> $mechNameDisplay[$arrayCounter] </a> </td>
-            <td> $mechArmorDisplay[$arrayCounter] </td>
-            </tr>";
-    }
-*/
- ?>

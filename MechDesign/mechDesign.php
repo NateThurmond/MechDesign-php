@@ -148,7 +148,7 @@ $login = new Login();
                         <h4>Tonnage</h4>
                         <div class="detailsTextDisplay" id="mechTonnage">
                             <p style="display: inline-block;">Tonnage:</p>
-                            <select class="dropDownSelectors" id="mechTonnageDropDown" name="mechTonnageDropDown" onchange="changeMechTotalTonnage($(this).val()); "></select>
+                            <select class="dropDownSelectors" id="mechTonnageDropDown" name="mechTonnageDropDown" onchange="changeMechInternalTonnage($(this).val()); "></select>
                             <p style="font-weight: normal; margin-top: -4px;"><strong>Mech Type:</strong> BattleMech</p>
                             <p id="totalWeight" style="font-weight: normal; margin-top: -6px;"></p>
                         </div>

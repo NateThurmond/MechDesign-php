@@ -1,5 +1,6 @@
 var getFullMechData; // FN to return full mech data
 var fullMechData = {}; // Returned from db on page load from above fn
+var armorCharts = {};
 
 // FUNCTION TO DISPLAY ARMOR POINTS DYNAMICALLY AND EVENLY ACROSS MULTIPLE ROWS
 function armorDisplayCircles(classToMod, idToMod, armorCircles, divLines) {
@@ -197,18 +198,25 @@ function displayArmorSection(displayLocale, mechData) {
 
 // Method to update the heat sink/type/dissipation data
 function updateHeatSinksJSON(swapHeatSyncType = false, newHeatSyncNum = -1) {
+    let changeMade = false;
     if (swapHeatSyncType === true) {
         fullMechData.mechinternals_heatSinkType =
             fullMechData.mechinternals_heatSinkType === "Singles" ? "Doubles" : "Singles";
+        changeMade = true;
     }
     if (newHeatSyncNum !== -1) {
         fullMechData.mechinternals_heatSinksNum = newHeatSyncNum;
+        changeMade = true;
     }
 
     $("#heatSinkTypeDropDown").val(fullMechData.mechinternals_heatSinkType);
     $("#heatSinkNumDropDown").val(fullMechData.mechinternals_heatSinksNum);
     let heatSinkMulti = $("#heatSinkTypeDropDown").val() === "Singles" ? 1 : 2;
     $("#heatDissipation").html(heatSinkMulti * parseInt($("#heatSinkNumDropDown").val(), 10));
+
+    if (changeMade === true) {
+        changeMechInternalTonnage(fullMechData.mechs_maxTonnage);
+    }
 }
 
 async function updateEngine(updatedEngineChange = false) {
@@ -231,10 +239,164 @@ async function updateEngine(updatedEngineChange = false) {
     $("#mechWalk").find(".movementValues").val(fullMechData.mechengine_mechWalk);
     $("#mechRun").find(".movementValues").val(fullMechData.mechengine_mechRun);
     $("#mechJump").find(".movementValues").val(fullMechData.mechengine_mechJump);
+    changeMechInternalTonnage(fullMechData.mechs_maxTonnage);
 }
 
-function changeMechTotalTonnage(mechWeight) {
+function changeMechInternalTonnage(mechWeight) {
     fullMechData.mechs_maxTonnage = mechWeight;
+
+    let walkSpeed = parseInt($("#mechWalk").find(".movementValues").val(), 10);
+
+    // Calculate the engine rating (assumes walking speed of 4)
+    const engineRating = mechWeight * walkSpeed;
+
+    // Internal Structure Weight: 10% of mech weight
+    const internalStructure = mechWeight * 0.1;
+
+    // Engine Weight and Criticals (based on official table approximations)
+    let engineWeight, engineCrits;
+    if (fullMechData.mechengine_engineName === "Fusion Engine") {
+        engineWeight = getFusionEngineWeight(engineRating, mechWeight);
+        engineCrits = 6; // Fixed: 2 in each torso section
+    } else if (fullMechData.mechengine_engineName === "XL Engine") {
+        engineWeight = getXLEngineWeight(engineRating, mechWeight);
+        engineCrits = 12; // Fixed: 4 in each torso section
+    }
+    console.log(engineWeight);
+
+    // Gyro Weight and Slots
+    const gyroWeight = Math.ceil((engineRating / 100) * 2 * 2) / 2;
+    const gyroCrits = 4; // Standard gyro
+
+    // Cockpit Weight and Slots
+    const cockpitWeight = 3;
+    const cockpitCrits = 1; // Always in the head
+
+    // Heat Sink Weight and Slots
+    const extraHeatSinkWeight = Math.max(fullMechData.mechinternals_heatSinksNum - 10, 0);
+    const heatSinkCrits =
+        fullMechData.mechinternals_heatSinksNum > 10 ? fullMechData.mechinternals_heatSinksNum - 10 : 0;
+
+    // Total Weight
+    const totalWeight = internalStructure + engineWeight + gyroWeight + cockpitWeight + extraHeatSinkWeight;
+
+    // Total Criticals
+    const totalCriticals = engineCrits + gyroCrits + cockpitCrits + heatSinkCrits;
+
+    // Return all calculated values
+    console.log({
+        mechWeight,
+        engineName: fullMechData.mechengine_engineName,
+        heatSinksNum: fullMechData.mechinternals_heatSinksNum,
+        internalStructure: internalStructure.toFixed(1),
+        engineWeight: engineWeight.toFixed(1),
+        gyroWeight: gyroWeight.toFixed(1),
+        cockpitWeight: cockpitWeight.toFixed(1),
+        extraHeatSinkWeight: extraHeatSinkWeight.toFixed(1),
+        totalWeight: totalWeight.toFixed(1),
+        engineCrits,
+        gyroCrits,
+        cockpitCrits,
+        heatSinkCrits,
+        totalCriticals,
+    });
+
+    // fullMechData.mechinternals_totalInternalTonnage = internalStructure.toFixed(1);
+    fullMechData.mechinternals_engineTonnage = engineWeight.toFixed(1);
+
+    // fullMechData.mechinternals_internalStructureTonnage = totalWeight.toFixed(1);
+    // fullMechData.mechinternals_internalStructureCriticals = totalCriticals;
+
+    fullMechData.mechinternals_gyroTonnage = gyroWeight.toFixed(1);
+    fullMechData.mechinternals_cockpitTonnage = cockpitWeight.toFixed(1);
+    fullMechData.mechinternals_heatSinksTonnage = extraHeatSinkWeight.toFixed(1);
+    fullMechData.mechinternals_engineCriticals = engineCrits;
+    fullMechData.mechinternals_gyroCriticals = gyroCrits;
+    fullMechData.mechinternals_cockpitCriticals = cockpitCrits;
+    fullMechData.mechinternals_heatSinksCriticals = heatSinkCrits;
+    fullMechData.mechinternals_jumpJetsNum = $("#mechJump").find(".movementValues").val();
+    fullMechData.mechinternals_jumpJetsTonnage = $("#mechJump").find(".movementValues").val();
+    fullMechData.mechinternals_jumpJetsCriticals = Math.ceil(fullMechData.mechinternals_jumpJetsNum / 3);
+
+    fullMechData.mechinternals_internalStructureTonnage =
+        parseInt(fullMechData.mechinternals_engineTonnage, 10) +
+        parseInt(fullMechData.mechinternals_gyroTonnage, 10) +
+        parseInt(fullMechData.mechinternals_cockpitTonnage, 10) +
+        parseInt(fullMechData.mechinternals_heatSinksTonnage, 10) +
+        parseInt(1, 10) +
+        parseInt(fullMechData.mechinternals_jumpJetsNum, 10);
+
+    // let externalArmor = fullMechData.mechexternalarmor_mechArmorTotal;
+    // let maxTonnage = fullMechData.mechs_maxTonnage;
+    // let externalArmorWeight = Math.ceil(fullMechData.mechexternalarmor_mechArmorTotal / 8) / 2;
+    fullMechData.mechinternals_totalInternalTonnage =
+        fullMechData.mechinternals_internalStructureTonnage +
+        Math.ceil(fullMechData.mechexternalarmor_mechArmorTotal / 8) / 2;
+
+    fullMechData.mechinternals_internalStructureCriticals =
+        parseInt(fullMechData.mechinternals_engineCriticals, 10) +
+        parseInt(fullMechData.mechinternals_gyroCriticals, 10) +
+        parseInt(fullMechData.mechinternals_cockpitCriticals, 10) +
+        parseInt(fullMechData.mechinternals_heatSinksCriticals, 10) +
+        parseInt(1, 10) +
+        parseInt(fullMechData.mechinternals_jumpJetsCriticals, 10);
+
+    updateEngineTonnageJSON();
+    updateTonnage();
+}
+
+function getFusionEngineWeight(engineRating, mechWeight) {
+    console.log(engineRating, mechWeight);
+
+    // Weight table with mech weight as key and array of weights as values for different engine ratings
+    const weightTable = {
+        20: [1.5, 2, 2.5, 3, 3.5, 4],
+        25: [2, 2.5, 3, 3.5, 4, 4.5],
+        30: [2.5, 3, 3.5, 4, 4.5, 5],
+        35: [3, 3.5, 4, 4.5, 5, 5.5],
+        40: [3.5, 4, 4.5, 5, 5.5, 6],
+        45: [4, 4.5, 5, 5.5, 6, 6.5],
+        50: [4.5, 5, 5.5, 6, 6.5, 7],
+        55: [5, 5.5, 6, 6.5, 7, 7.5],
+        60: [5.5, 6, 6.5, 7, 7.5, 8],
+        65: [6, 6.5, 7, 7.5, 8, 8.5],
+        70: [6.5, 7, 7.5, 8, 8.5, 9],
+        75: [7, 7.5, 8, 8.5, 9, 9.5],
+        80: [7.5, 8, 8.5, 9, 9.5, 10],
+        85: [8, 8.5, 9, 9.5, 10, 10.5],
+        90: [8.5, 9, 9.5, 10, 10.5, 11],
+        95: [9, 9.5, 10, 10.5, 11, 11.5],
+        100: [9.5, 10, 10.5, 11, 11.5, 12],
+    };
+
+    // Determine engine rating index based on engine rating
+    let ratingIndex;
+    if (engineRating <= 80) {
+        ratingIndex = 0; // Rating 80
+    } else if (engineRating <= 100) {
+        ratingIndex = 1; // Rating 100
+    } else if (engineRating <= 120) {
+        ratingIndex = 2; // Rating 120
+    } else if (engineRating <= 140) {
+        ratingIndex = 3; // Rating 140
+    } else if (engineRating <= 160) {
+        ratingIndex = 4; // Rating 160
+    } else {
+        ratingIndex = 5; // Rating 180
+    }
+
+    // If mechWeight is higher than 100, use the closest match from the table
+    if (mechWeight > 100) {
+        mechWeight = 100; // Cap to 100 tons for now as there is no direct match in the table for larger weights
+    }
+
+    // Get the engine weight based on the mech weight and the rating index
+    return weightTable[mechWeight][ratingIndex];
+}
+
+function getXLEngineWeight(engineRating, mechWeight) {
+    // XL engines are 50% lighter but require extra critical slots
+    return getFusionEngineWeight(engineRating, mechWeight) * 0.5;
 }
 
 function updateEngineTonnageJSON() {
@@ -277,6 +439,10 @@ $(document).ready(function () {
         document.getElementById("mechTonnageDropDown").appendChild(option);
     }
 
+    $.getJSON("php/getMaxArmorChart.php", (res) => {
+        armorCharts = res;
+    });
+
     // FN to get all data for the mech in one call
     getFullMechData = function () {
         // Get all data representing the full mech
@@ -289,13 +455,10 @@ $(document).ready(function () {
             displayArmorSection("mechArmor", mechData);
             updateHeatSinksJSON();
             updateEngine();
-            updateEngineTonnageJSON();
+            changeMechInternalTonnage(mechData.mechs_maxTonnage);
         });
     };
     getFullMechData(); // Called on page load
-
-    // updateArmor("mechArmor");
-    // updateTonnage();
 
     function displayAllCrits() {
         displayCrits("leftArmCritTable", "mecharm", 0, "one", 4);
@@ -460,70 +623,197 @@ $(document).ready(function () {
     });
 });
 
-// function updateArmor(displayLocation) {
-//     getFullMechData();
-// }
-
-function changeMechStats(mechID, armorLocation, incDec, armorUpdateID) {
+function changeMechStats(armorLocation, incDec, armorUpdateID) {
     var linked = "yes";
-
     if (!$("#mirrorArmorBox").is(":checked")) {
         linked = "no";
     }
 
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp2 = new XMLHttpRequest();
-    }
-    xmlhttp2.onreadystatechange = function () {
-        if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
-            //document.getElementById("test2").innerHTML=xmlhttp2.responseText;
-            // updateArmor(armorUpdateID);
-            // updateTonnage();
-        }
-    };
+    // Example args passed to this function
+    // 'headArmor' 'increase' 'head' 'yes'
 
-    xmlhttp2.open(
-        "GET",
-        "php/getMechData.php?mechIdPassed=" +
-            mechID +
-            "&incArm=" +
-            incDec +
-            "&armorLocation=" +
-            armorLocation +
-            "&linked=" +
-            linked,
-        true
-    );
-    xmlhttp2.send();
+    // Example data from mechFullData we utilize in this function
+    /*
+        "mechexternalarmor_armLeftArmor": 4,
+        "mechexternalarmor_armRightArmor": 4,
+        "mechexternalarmor_centerArmor": 4,
+        "mechexternalarmor_headArmor": 4,
+        "mechexternalarmor_id": 2,
+        "mechexternalarmor_legLeftArmor": 4,
+        "mechexternalarmor_legRightArmor": 4,
+        "mechexternalarmor_mechArmorTotal": 100,
+        "mechexternalarmor_mechID": 2,
+        "mechexternalarmor_rearCenterArmor": 4,
+        "mechexternalarmor_rearLeftTorsoArmor": 4,
+        "mechexternalarmor_rearRightTorsoArmor": 4,
+        "mechexternalarmor_torsoLeftArmor": 4,
+        "mechexternalarmor_torsoRightArmor": 4,
+    */
+
+    // Fetch the necessary data from the fullMechData object
+    let mechData = fullMechData;
+    let maxTonnage = mechData.mechs_maxTonnage;
+
+    let tonArmor = armorCharts[maxTonnage];
+    let maxTorsoArmor = tonArmor.torsoMax;
+    let maxArmArmor = tonArmor.armMax;
+    let maxLegArmor = tonArmor.legMax;
+    let maxCenterArmor = tonArmor.centerTorsoMax;
+
+    let armorLocation2;
+    let altArmorLocation;
+    let altArmorLocation2;
+    let maxArmor;
+    let revAltArmor = 0;
+
+    if (armorLocation == "torsoLeftArmor") {
+        maxArmor = maxTorsoArmor;
+        altArmorLocation = "torsoRightArmor";
+        revAltArmor = fullMechData.mechexternalarmor_rearLeftTorsoArmor;
+        armorLocation2 = "rearLeftTorsoArmor";
+        altArmorLocation2 = "rearRightTorsoArmor";
+    } else if (armorLocation == "torsoRightArmor") {
+        maxArmor = maxTorsoArmor;
+        altArmorLocation = "torsoLeftArmor";
+        revAltArmor = fullMechData.mechexternalarmor_rearRightTorsoArmor;
+        armorLocation2 = "rearRightTorsoArmor";
+        altArmorLocation2 = "rearLeftTorsoArmor";
+    } else if (armorLocation == "legLeftArmor") {
+        maxArmor = maxLegArmor;
+        altArmorLocation = "legRightArmor";
+    } else if (armorLocation == "legRightArmor") {
+        maxArmor = maxLegArmor;
+        altArmorLocation = "legLeftArmor";
+    } else if (armorLocation == "armLeftArmor") {
+        maxArmor = maxArmArmor;
+        altArmorLocation = "armRightArmor";
+    } else if (armorLocation == "armRightArmor") {
+        maxArmor = maxArmArmor;
+        altArmorLocation = "armLeftArmor";
+    } else if (armorLocation == "rearLeftTorsoArmor") {
+        maxArmor = maxTorsoArmor;
+        altArmorLocation = "rearRightTorsoArmor";
+        revAltArmor = fullMechData.mechexternalarmor_torsoLeftArmor;
+        armorLocation2 = "torsoLeftArmor";
+        altArmorLocation2 = "torsoRightArmor";
+    } else if (armorLocation == "rearRightTorsoArmor") {
+        maxArmor = maxTorsoArmor;
+        altArmorLocation = "rearLeftTorsoArmor";
+        revAltArmor = fullMechData.mechexternalarmor_torsoRightArmor;
+        armorLocation2 = "torsoRightArmor";
+        altArmorLocation2 = "torsoLeftArmor";
+    } else if (armorLocation == "centerArmor") {
+        maxArmor = maxCenterArmor;
+        revAltArmor = fullMechData.mechexternalarmor_rearCenterArmor;
+        linked = "no";
+        armorLocation2 = "rearCenterArmor";
+    } else if (armorLocation == "rearCenterArmor") {
+        maxArmor = maxCenterArmor;
+        revAltArmor = fullMechData.mechexternalarmor_centerArmor;
+        linked = "no";
+        armorLocation2 = "centerArmor";
+    } else if (armorLocation == "headArmor") {
+        maxArmor = 9;
+        linked = "no";
+    }
+
+    let armorLocationMod = 1;
+    if (incDec == "decrease") {
+        if (fullMechData["mechexternalarmor_" + armorLocation] > 1) {
+            armorLocationMod = -1;
+        } else {
+            armorLocationMod = 0;
+        }
+    }
+
+    console.log(maxArmor);
+    console.log(fullMechData["mechexternalarmor_" + armorLocation]);
+    if (fullMechData["mechexternalarmor_" + armorLocation] < maxArmor) {
+        updateArmor(armorLocation, armorLocationMod, linked, altArmorLocation);
+    } else if (fullMechData["mechexternalarmor_" + armorLocation] >= maxArmor && incDec == "decrease") {
+        updateArmor(armorLocation, armorLocationMod, linked, altArmorLocation);
+    }
+
+    if (revAltArmor) {
+        let armorThis = fullMechData["mechexternalarmor_" + armorLocation];
+
+        if (revAltArmor + armorThis > maxArmor) {
+            updateArmor(armorLocation2, -1, linked, altArmorLocation2);
+        }
+
+        if (altArmorLocation2) {
+            revAltArmor = fullMechData["mechexternalarmor_" + altArmorLocation2];
+            armorThis = fullMechData["mechexternalarmor_" + altArmorLocation];
+
+            if (revAltArmor + armorThis > maxArmor) {
+                updateArmor(altArmorLocation2, -1, linked, armorLocation2);
+            }
+        }
+    }
+
+    function updateArmor(armorLocation, armorLocationMod, linked, altArmorLocation) {
+        fullMechData["mechexternalarmor_" + armorLocation] =
+            fullMechData["mechexternalarmor_" + armorLocation] + armorLocationMod;
+
+        if (linked == "yes") {
+            fullMechData["mechexternalarmor_" + altArmorLocation] = fullMechData["mechexternalarmor_" + armorLocation];
+        }
+    }
+
+    fullMechData.mechexternalarmor_mechArmorTotal =
+        fullMechData.mechexternalarmor_torsoLeftArmor +
+        fullMechData.mechexternalarmor_torsoRightArmor +
+        fullMechData.mechexternalarmor_legLeftArmor +
+        fullMechData.mechexternalarmor_legRightArmor +
+        fullMechData.mechexternalarmor_armLeftArmor +
+        fullMechData.mechexternalarmor_armRightArmor +
+        fullMechData.mechexternalarmor_rearLeftTorsoArmor +
+        fullMechData.mechexternalarmor_rearRightTorsoArmor +
+        fullMechData.mechexternalarmor_centerArmor +
+        fullMechData.mechexternalarmor_rearCenterArmor +
+        fullMechData.mechexternalarmor_headArmor;
+
+    displayArmorSection("mechArmor", fullMechData);
+    updateTonnage();
 }
 
 function updateTonnage() {
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp6 = new XMLHttpRequest();
+    // Example data from mechFullData we utilize in this function
+    /*
+        "mechexternalarmor_armLeftArmor": 4,
+        "mechexternalarmor_armRightArmor": 4,
+        "mechexternalarmor_centerArmor": 4,
+        "mechexternalarmor_headArmor": 4,
+        "mechexternalarmor_id": 2,
+        "mechexternalarmor_legLeftArmor": 4,
+        "mechexternalarmor_legRightArmor": 4,
+        "mechexternalarmor_mechArmorTotal": 100,
+        "mechexternalarmor_mechID": 2,
+        "mechexternalarmor_rearCenterArmor": 4,
+        "mechexternalarmor_rearLeftTorsoArmor": 4,
+        "mechexternalarmor_rearRightTorsoArmor": 4,
+        "mechexternalarmor_torsoLeftArmor": 4,
+        "mechexternalarmor_torsoRightArmor": 4,
+    */
+
+    let internalWeight = fullMechData.mechinternals_totalInternalTonnage;
+    let externalArmor = fullMechData.mechexternalarmor_mechArmorTotal;
+    let maxTonnage = fullMechData.mechs_maxTonnage;
+    let externalArmorWeight = Math.ceil(externalArmor / 8) / 2;
+    let totalWeight = externalArmorWeight + internalWeight;
+
+    if (totalWeight > maxTonnage) {
+        document.getElementById("totalWeight").style.color = "red";
+        document.getElementById("totalWeightArmorPage").style.color = "red";
+    } else {
+        document.getElementById("totalWeight").style.color = "white";
+        document.getElementById("totalWeightArmorPage").style.color = "black";
     }
-    xmlhttp6.onreadystatechange = function () {
-        if (xmlhttp6.readyState === 4 && xmlhttp6.status === 200) {
-            var tonnageDataJSON = JSON.parse(xmlhttp6.response);
 
-            if (tonnageDataJSON.totalWeight > tonnageDataJSON.maxTonnage) {
-                document.getElementById("totalWeight").style.color = "red";
-                document.getElementById("totalWeightArmorPage").style.color = "red";
-            } else {
-                document.getElementById("totalWeight").style.color = "white";
-                document.getElementById("totalWeightArmorPage").style.color = "black";
-            }
-
-            document.getElementById("totalWeight").innerHTML =
-                "<strong>Current Tonnage:</strong> " + tonnageDataJSON.totalWeight + "/" + tonnageDataJSON.maxTonnage;
-            document.getElementById("totalWeightArmorPage").innerHTML =
-                "<strong>Current Tonnage:</strong> " + tonnageDataJSON.totalWeight + "/" + tonnageDataJSON.maxTonnage;
-        }
-    };
-
-    xmlhttp6.open("GET", "php/getMechTonnage.php", true);
-    xmlhttp6.send();
+    document.getElementById("totalWeight").innerHTML =
+        "<strong>Current Tonnage:</strong> " + totalWeight + "/" + maxTonnage;
+    document.getElementById("totalWeightArmorPage").innerHTML =
+        "<strong>Current Tonnage:</strong> " + totalWeight + "/" + maxTonnage;
 }
 
 $(document).ready(function () {
@@ -644,6 +934,32 @@ function makeDroppable() {
         },
     });
 }
+
+$(document).on("click", ".upMovementArrow", function () {
+    $(this)
+        .prev()
+        .val(parseInt($(this).prev().val(), 10) + 1);
+
+    fullMechData.mechengine_mechWalk = $("#mechWalk").find(".movementValues").val();
+    fullMechData.mechengine_mechRun = Math.ceil(fullMechData.mechengine_mechWalk * 1.5);
+    $("#mechRun").find(".movementValues").val(fullMechData.mechengine_mechRun);
+    fullMechData.mechengine_mechJump = $("#mechJump").find(".movementValues").val();
+    updateEngine(false);
+});
+
+$(document).on("click", ".downMovementArrow", function () {
+    let walkJumpMin = $(this).attr("id") === "downArrowWalk" ? 1 : 0;
+    let prevNum = parseInt($(this).prev().prev().val(), 10);
+    prevNum = prevNum - 1;
+    prevNum = Math.max(prevNum, walkJumpMin);
+    $(this).prev().prev().val(prevNum);
+
+    fullMechData.mechengine_mechWalk = $("#mechWalk").find(".movementValues").val();
+    fullMechData.mechengine_mechRun = Math.ceil(fullMechData.mechengine_mechWalk * 1.5);
+    $("#mechRun").find(".movementValues").val(fullMechData.mechengine_mechRun);
+    fullMechData.mechengine_mechJump = $("#mechJump").find(".movementValues").val();
+    updateEngine(false);
+});
 
 $(document).on("click", ".submitChanges", (e) => {
     e.stopPropagation();

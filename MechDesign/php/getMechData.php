@@ -1,7 +1,7 @@
 <?php
 
 require_once("../config/config.php");
-include("php/DB_Conn.php");
+include("DB_Conn.php");
 
     $incArm = $_GET['incArm'];
     $mechIdPassed = intval($_GET['mechIdPassed']);
