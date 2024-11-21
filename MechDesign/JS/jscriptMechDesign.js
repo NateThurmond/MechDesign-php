@@ -1,6 +1,262 @@
 var getFullMechData; // FN to return full mech data
 var fullMechData = {}; // Returned from db on page load from above fn
 
+// FUNCTION TO DISPLAY ARMOR POINTS DYNAMICALLY AND EVENLY ACROSS MULTIPLE ROWS
+function armorDisplayCircles(classToMod, idToMod, armorCircles, divLines) {
+    const container = document.createElement("div");
+    container.className = classToMod;
+    container.id = idToMod;
+
+    let divCounter = 0;
+    for (let count = 0; count < armorCircles; count++) {
+        const circle = document.createElement("p");
+        circle.className = "circle";
+        container.appendChild(circle);
+        divCounter++;
+        if (divCounter % divLines === 0) {
+            container.appendChild(document.createElement("br"));
+        }
+    }
+    return container;
+}
+
+function updateMechMeta(mechData) {
+    $('input[name="mechName"]').val(mechData.mechs_mechName);
+    $('input[name="mechModel"]').val(mechData.mechs_mechModel);
+    $("#indMechEra").html(`Era: ${mechData.mechs_era}`);
+    $("#indMechTechBase").html(`Tech Base: ${mechData.mechs_techBase}`);
+    $("#indMechProdYear").html(`Production Year: ${mechData.mechs_productionYear}`);
+}
+
+// FUNCTION TO DISPLAY ARMOR VALUES (External armor that is)
+function displayArmorSection(displayLocale, mechData) {
+    mechData = mechData;
+    const mechArmorContainer = document.getElementById("mechArmor");
+    $(mechArmorContainer).empty();
+
+    // Add arm armor
+    const armorCirclesLeftArm = parseInt(mechData.mechexternalarmor_armLeftArmor);
+    const armorCirclesRightArm = parseInt(mechData.mechexternalarmor_armRightArmor);
+    const numDivsLeftArm = Math.ceil(armorCirclesLeftArm / 10);
+    const numDivsRightArm = Math.ceil(armorCirclesRightArm / 10);
+
+    const armContainer = document.createElement("div");
+    armContainer.id = "arm";
+
+    armContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "leftArmArmor", armorCirclesLeftArm, numDivsLeftArm)
+    );
+    armContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "rightArmArmor", armorCirclesRightArm, numDivsRightArm)
+    );
+
+    armContainer.innerHTML += `
+        <div id="leftArmArmorNumeric"><p>${armorCirclesLeftArm}</p></div>
+        <div id="rightArmArmorNumeric"><p>${armorCirclesRightArm}</p></div>
+    `;
+    mechArmorContainer.appendChild(armContainer);
+
+    // Add head armor
+    const armorCirclesHead = parseInt(mechData.mechexternalarmor_headArmor);
+    const numDivsHead = Math.ceil(armorCirclesHead / 3);
+
+    const headContainer = document.createElement("div");
+    headContainer.id = "head";
+
+    headContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "mechHeadArmor", armorCirclesHead, numDivsHead)
+    );
+    headContainer.innerHTML += `<div id="mechHeadArmorNumeric"><p>${armorCirclesHead}</p></div>`;
+    mechArmorContainer.appendChild(headContainer);
+
+    // Add center armor
+    const armorCirclesCenter = parseInt(mechData.mechexternalarmor_centerArmor);
+    const armorCirclesRearCenter = parseInt(mechData.mechexternalarmor_rearCenterArmor);
+    const numDivsCenter = Math.ceil(armorCirclesCenter / 9);
+    const numDivsRearCenter = Math.ceil(armorCirclesRearCenter / 9);
+
+    const centerContainer = document.createElement("div");
+    centerContainer.id = "center";
+
+    centerContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "centerArmor", armorCirclesCenter, numDivsCenter)
+    );
+    centerContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "centerRearArmor", armorCirclesRearCenter, numDivsRearCenter)
+    );
+
+    centerContainer.innerHTML += `
+        <div id="centerArmorNumeric"><p>${armorCirclesCenter}</p></div>
+        <div id="centerRearArmorNumeric"><p>${armorCirclesRearCenter}</p></div>
+    `;
+    mechArmorContainer.appendChild(centerContainer);
+
+    // Torsor Armor
+    const armorCirclesLeftTorso = parseInt(mechData.mechexternalarmor_torsoLeftArmor);
+    const armorCirclesRightTorso = parseInt(mechData.mechexternalarmor_torsoRightArmor);
+    const armorCirclesLeftRear = parseInt(mechData.mechexternalarmor_rearLeftTorsoArmor);
+    const armorCirclesRightRear = parseInt(mechData.mechexternalarmor_rearRightTorsoArmor);
+
+    const armorTorsoLeftTop = Math.round(armorCirclesLeftTorso * 0.57);
+    const numDivsTorsoLeftTop = Math.ceil(armorTorsoLeftTop / 4);
+    const armorTorsoRightTop = Math.round(armorCirclesRightTorso * 0.57);
+    const numDivsTorsoRightTop = Math.ceil(armorTorsoRightTop / 4);
+    const armorTorsoLeftBottom = Math.round(armorCirclesLeftTorso * 0.285);
+    const numDivsTorsoLeftBottom = Math.ceil(armorTorsoLeftBottom / 2);
+    const armorTorsoRightBottom = Math.round(armorCirclesRightTorso * 0.285);
+    const numDivsTorsoRightBottom = Math.ceil(armorTorsoRightBottom / 2);
+    const armorTorsoLeftMiddle = armorCirclesLeftTorso - (armorTorsoLeftTop + armorTorsoLeftBottom);
+    const numDivsTorsoLeftMiddle = Math.ceil(armorTorsoLeftMiddle / 3);
+    const armorTorsoRightMiddle = armorCirclesRightTorso - (armorTorsoRightTop + armorTorsoRightBottom);
+    const numDivsTorsoRightMiddle = Math.ceil(armorTorsoRightMiddle / 3);
+    const numDivsTorsoLeftRear = Math.ceil(armorCirclesLeftRear / 4);
+    const numDivsTorsoRightRear = Math.ceil(armorCirclesRightRear / 4);
+
+    const torsoContainer = document.createElement("div");
+    torsoContainer.id = "torso";
+
+    torsoContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "leftTorsoArmorTop", armorTorsoLeftTop, numDivsTorsoLeftTop)
+    );
+    torsoContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "leftTorsoArmorMiddle", armorTorsoLeftMiddle, numDivsTorsoLeftMiddle)
+    );
+    torsoContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "leftTorsoArmorBottom", armorTorsoLeftBottom, numDivsTorsoLeftBottom)
+    );
+
+    torsoContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "rightTorsoArmorTop", armorTorsoRightTop, numDivsTorsoRightTop)
+    );
+    torsoContainer.appendChild(
+        armorDisplayCircles(
+            "armorDisplayLayout",
+            "rightTorsoArmorMiddle",
+            armorTorsoRightMiddle,
+            numDivsTorsoRightMiddle
+        )
+    );
+    torsoContainer.appendChild(
+        armorDisplayCircles(
+            "armorDisplayLayout",
+            "rightTorsoArmorBottom",
+            armorTorsoRightBottom,
+            numDivsTorsoRightBottom
+        )
+    );
+
+    torsoContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "leftRearTorsoArmor", armorCirclesLeftRear, numDivsTorsoLeftRear)
+    );
+    torsoContainer.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "rightRearTorsoArmor", armorCirclesRightRear, numDivsTorsoRightRear)
+    );
+
+    torsoContainer.innerHTML += `
+        <div id="leftTorsoArmorNumeric">${armorCirclesLeftTorso}</div>
+        <div id="rightTorsoArmorNumeric">${armorCirclesRightTorso}</div>
+        <div id="leftRearTorsoArmorNumeric">${armorCirclesLeftRear}</div>
+        <div id="rightRearTorsoArmorNumeric">${armorCirclesRightRear}</div>
+    `;
+    mechArmorContainer.appendChild(torsoContainer);
+
+    // And finally leg armor
+    const armorCirclesLeftLeg = mechData.mechexternalarmor_legLeftArmor;
+    const armorCirclesRightLeg = mechData.mechexternalarmor_legRightArmor;
+
+    const numDivsLeftLeg = Math.ceil(armorCirclesLeftLeg / 12);
+    const numDivsRightLeg = Math.ceil(armorCirclesRightLeg / 12);
+
+    const legSection = document.createElement("div");
+    legSection.id = "leg";
+
+    // Left Leg Armor
+    legSection.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "leftLegArmor", armorCirclesLeftLeg, numDivsLeftLeg)
+    );
+
+    // Right Leg Armor
+    legSection.appendChild(
+        armorDisplayCircles("armorDisplayLayout", "rightLegArmor", armorCirclesRightLeg, numDivsRightLeg)
+    );
+
+    // Numeric Values for Left and Right Leg
+    const leftLegNumeric = document.createElement("div");
+    leftLegNumeric.id = "leftLegArmorNumeric";
+    leftLegNumeric.textContent = armorCirclesLeftLeg;
+    legSection.appendChild(leftLegNumeric);
+
+    const rightLegNumeric = document.createElement("div");
+    rightLegNumeric.id = "rightLegArmorNumeric";
+    rightLegNumeric.textContent = armorCirclesRightLeg;
+    legSection.appendChild(rightLegNumeric);
+
+    // Append the leg section to the parent container
+    mechArmorContainer.appendChild(legSection);
+}
+
+// Method to update the heat sink/type/dissipation data
+function updateHeatSinksJSON(swapHeatSyncType = false, newHeatSyncNum = -1) {
+    if (swapHeatSyncType === true) {
+        fullMechData.mechinternals_heatSinkType =
+            fullMechData.mechinternals_heatSinkType === "Singles" ? "Doubles" : "Singles";
+    }
+    if (newHeatSyncNum !== -1) {
+        fullMechData.mechinternals_heatSinksNum = newHeatSyncNum;
+    }
+
+    $("#heatSinkTypeDropDown").val(fullMechData.mechinternals_heatSinkType);
+    $("#heatSinkNumDropDown").val(fullMechData.mechinternals_heatSinksNum);
+    let heatSinkMulti = $("#heatSinkTypeDropDown").val() === "Singles" ? 1 : 2;
+    $("#heatDissipation").html(heatSinkMulti * parseInt($("#heatSinkNumDropDown").val(), 10));
+}
+
+async function updateEngine(updatedEngineChange = false) {
+    if (updatedEngineChange !== false && typeof updatedEngineChange === "string") {
+        fullMechData.mechengine_engineName = updatedEngineChange;
+        const resp = await $.getJSON(
+            "php/getMechEngineData.php?engineName=" + encodeURIComponent(fullMechData.mechengine_engineName)
+        );
+
+        // Destructure the response
+        const { engineRating, mechJump, mechRun, mechWalk } = resp;
+        fullMechData.mechengine_mechRun = mechRun;
+        fullMechData.mechengine_mechJump = mechJump;
+        fullMechData.mechengine_mechWalk = mechWalk;
+        fullMechData.mechengine_engineRating = engineRating;
+    }
+
+    // Update the DOM
+    $("#engineDropDown").val(fullMechData.mechengine_engineName);
+    $("#mechWalk").find(".movementValues").val(fullMechData.mechengine_mechWalk);
+    $("#mechRun").find(".movementValues").val(fullMechData.mechengine_mechRun);
+    $("#mechJump").find(".movementValues").val(fullMechData.mechengine_mechJump);
+}
+
+function changeMechTotalTonnage(mechWeight) {
+    fullMechData.mechs_maxTonnage = mechWeight;
+}
+
+function updateEngineTonnageJSON() {
+    $("#mechTonnageDropDown").val(fullMechData.mechs_maxTonnage);
+    document.getElementById("mechEngineRating").innerHTML = fullMechData.mechengine_engineRating;
+    document.getElementById("internalsTonnage").innerHTML = fullMechData.mechinternals_internalStructureTonnage;
+    document.getElementById("InternalsCriticalsTableData").innerHTML =
+        fullMechData.mechinternals_internalStructureCriticals;
+    document.getElementById("engineTonnage").innerHTML = fullMechData.mechinternals_engineTonnage;
+    document.getElementById("engineCriticals").innerHTML = fullMechData.mechinternals_engineCriticals;
+    document.getElementById("cockpitTonnage").innerHTML = fullMechData.mechinternals_cockpitTonnage;
+    document.getElementById("cockpitCriticals").innerHTML = fullMechData.mechinternals_cockpitCriticals;
+    document.getElementById("gyroTonnage").innerHTML = fullMechData.mechinternals_gyroTonnage;
+    document.getElementById("gyroCriticals").innerHTML = fullMechData.mechinternals_gyroCriticals;
+    document.getElementById("heatSinksTonnage").innerHTML = fullMechData.mechinternals_heatSinksTonnage;
+    document.getElementById("heatSinksCriticals").innerHTML = fullMechData.mechinternals_heatSinksCriticals;
+    document.getElementById("enhancementsTonnage").innerHTML = fullMechData.mechinternals_enhancementsTonnage;
+    document.getElementById("enhancementsCriticals").innerHTML = fullMechData.mechinternals_enhancementsCriticals;
+    document.getElementById("jumpJetsTonnage").innerHTML = fullMechData.mechinternals_jumpJetsTonnage;
+    document.getElementById("jumpJetsCriticals").innerHTML = fullMechData.mechinternals_jumpJetsCriticals;
+}
+
 $(document).ready(function () {
     // Build out heatsink options for our dropdown for this
     var heatSinkNumOptions2 = [];
@@ -9,306 +265,16 @@ $(document).ready(function () {
         heatSinkNumOptions2[i].text = i;
         heatSinkNumOptions2[i].value = i;
         heatSinkNumOptions2[i].id = i;
-        document
-            .getElementById("heatSinkNumDropDown")
-            .appendChild(heatSinkNumOptions2[i]);
+        document.getElementById("heatSinkNumDropDown").appendChild(heatSinkNumOptions2[i]);
     }
 
-    // FUNCTION TO DISPLAY ARMOR POINTS DYNAMICALLY AND EVENLY ACROSS MULTIPLE ROWS
-    function armorDisplayCircles(classToMod, idToMod, armorCircles, divLines) {
-        const container = document.createElement("div");
-        container.className = classToMod;
-        container.id = idToMod;
-
-        let divCounter = 0;
-        for (let count = 0; count < armorCircles; count++) {
-            const circle = document.createElement("p");
-            circle.className = "circle";
-            container.appendChild(circle);
-            divCounter++;
-            if (divCounter % divLines === 0) {
-                container.appendChild(document.createElement("br"));
-            }
-        }
-        return container;
-    }
-
-    // FUNCTION TO DISPLAY ARMOR VALUES (External armor that is)
-    function displayArmorSection(displayLocale, mechData) {
-        mechData = mechData;
-        const mechArmorContainer = document.getElementById("mechArmor");
-        $(mechArmorContainer).empty();
-
-        // Add arm armor
-        const armorCirclesLeftArm = parseInt(
-            mechData.mechexternalarmor_armLeftArmor
-        );
-        const armorCirclesRightArm = parseInt(
-            mechData.mechexternalarmor_armRightArmor
-        );
-        const numDivsLeftArm = Math.ceil(armorCirclesLeftArm / 10);
-        const numDivsRightArm = Math.ceil(armorCirclesRightArm / 10);
-
-        const armContainer = document.createElement("div");
-        armContainer.id = "arm";
-
-        armContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "leftArmArmor",
-                armorCirclesLeftArm,
-                numDivsLeftArm
-            )
-        );
-        armContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "rightArmArmor",
-                armorCirclesRightArm,
-                numDivsRightArm
-            )
-        );
-
-        armContainer.innerHTML += `
-            <div id="leftArmArmorNumeric"><p>${armorCirclesLeftArm}</p></div>
-            <div id="rightArmArmorNumeric"><p>${armorCirclesRightArm}</p></div>
-        `;
-        mechArmorContainer.appendChild(armContainer);
-
-        // Add head armor
-        const armorCirclesHead = parseInt(mechData.mechexternalarmor_headArmor);
-        const numDivsHead = Math.ceil(armorCirclesHead / 3);
-
-        const headContainer = document.createElement("div");
-        headContainer.id = "head";
-
-        headContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "mechHeadArmor",
-                armorCirclesHead,
-                numDivsHead
-            )
-        );
-        headContainer.innerHTML += `<div id="mechHeadArmorNumeric"><p>${armorCirclesHead}</p></div>`;
-        mechArmorContainer.appendChild(headContainer);
-
-        // Add center armor
-        const armorCirclesCenter = parseInt(
-            mechData.mechexternalarmor_centerArmor
-        );
-        const armorCirclesRearCenter = parseInt(
-            mechData.mechexternalarmor_rearCenterArmor
-        );
-        const numDivsCenter = Math.ceil(armorCirclesCenter / 9);
-        const numDivsRearCenter = Math.ceil(armorCirclesRearCenter / 9);
-
-        const centerContainer = document.createElement("div");
-        centerContainer.id = "center";
-
-        centerContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "centerArmor",
-                armorCirclesCenter,
-                numDivsCenter
-            )
-        );
-        centerContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "centerRearArmor",
-                armorCirclesRearCenter,
-                numDivsRearCenter
-            )
-        );
-
-        centerContainer.innerHTML += `
-            <div id="centerArmorNumeric"><p>${armorCirclesCenter}</p></div>
-            <div id="centerRearArmorNumeric"><p>${armorCirclesRearCenter}</p></div>
-        `;
-        mechArmorContainer.appendChild(centerContainer);
-
-        // Torsor Armor
-        const armorCirclesLeftTorso = parseInt(
-            mechData.mechexternalarmor_torsoLeftArmor
-        );
-        const armorCirclesRightTorso = parseInt(
-            mechData.mechexternalarmor_torsoRightArmor
-        );
-        const armorCirclesLeftRear = parseInt(
-            mechData.mechexternalarmor_rearLeftTorsoArmor
-        );
-        const armorCirclesRightRear = parseInt(
-            mechData.mechexternalarmor_rearRightTorsoArmor
-        );
-
-        const armorTorsoLeftTop = Math.round(armorCirclesLeftTorso * 0.57);
-        const numDivsTorsoLeftTop = Math.ceil(armorTorsoLeftTop / 4);
-        const armorTorsoRightTop = Math.round(armorCirclesRightTorso * 0.57);
-        const numDivsTorsoRightTop = Math.ceil(armorTorsoRightTop / 4);
-        const armorTorsoLeftBottom = Math.round(armorCirclesLeftTorso * 0.285);
-        const numDivsTorsoLeftBottom = Math.ceil(armorTorsoLeftBottom / 2);
-        const armorTorsoRightBottom = Math.round(
-            armorCirclesRightTorso * 0.285
-        );
-        const numDivsTorsoRightBottom = Math.ceil(armorTorsoRightBottom / 2);
-        const armorTorsoLeftMiddle =
-            armorCirclesLeftTorso - (armorTorsoLeftTop + armorTorsoLeftBottom);
-        const numDivsTorsoLeftMiddle = Math.ceil(armorTorsoLeftMiddle / 3);
-        const armorTorsoRightMiddle =
-            armorCirclesRightTorso -
-            (armorTorsoRightTop + armorTorsoRightBottom);
-        const numDivsTorsoRightMiddle = Math.ceil(armorTorsoRightMiddle / 3);
-        const numDivsTorsoLeftRear = Math.ceil(armorCirclesLeftRear / 4);
-        const numDivsTorsoRightRear = Math.ceil(armorCirclesRightRear / 4);
-
-        const torsoContainer = document.createElement("div");
-        torsoContainer.id = "torso";
-
-        torsoContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "leftTorsoArmorTop",
-                armorTorsoLeftTop,
-                numDivsTorsoLeftTop
-            )
-        );
-        torsoContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "leftTorsoArmorMiddle",
-                armorTorsoLeftMiddle,
-                numDivsTorsoLeftMiddle
-            )
-        );
-        torsoContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "leftTorsoArmorBottom",
-                armorTorsoLeftBottom,
-                numDivsTorsoLeftBottom
-            )
-        );
-
-        torsoContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "rightTorsoArmorTop",
-                armorTorsoRightTop,
-                numDivsTorsoRightTop
-            )
-        );
-        torsoContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "rightTorsoArmorMiddle",
-                armorTorsoRightMiddle,
-                numDivsTorsoRightMiddle
-            )
-        );
-        torsoContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "rightTorsoArmorBottom",
-                armorTorsoRightBottom,
-                numDivsTorsoRightBottom
-            )
-        );
-
-        torsoContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "leftRearTorsoArmor",
-                armorCirclesLeftRear,
-                numDivsTorsoLeftRear
-            )
-        );
-        torsoContainer.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "rightRearTorsoArmor",
-                armorCirclesRightRear,
-                numDivsTorsoRightRear
-            )
-        );
-
-        torsoContainer.innerHTML += `
-            <div id="leftTorsoArmorNumeric">${armorCirclesLeftTorso}</div>
-            <div id="rightTorsoArmorNumeric">${armorCirclesRightTorso}</div>
-            <div id="leftRearTorsoArmorNumeric">${armorCirclesLeftRear}</div>
-            <div id="rightRearTorsoArmorNumeric">${armorCirclesRightRear}</div>
-        `;
-        mechArmorContainer.appendChild(torsoContainer);
-
-        // And finally leg armor
-        const armorCirclesLeftLeg = mechData.mechexternalarmor_legLeftArmor;
-        const armorCirclesRightLeg = mechData.mechexternalarmor_legRightArmor;
-
-        const numDivsLeftLeg = Math.ceil(armorCirclesLeftLeg / 12);
-        const numDivsRightLeg = Math.ceil(armorCirclesRightLeg / 12);
-
-        const legSection = document.createElement("div");
-        legSection.id = "leg";
-
-        // Left Leg Armor
-        legSection.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "leftLegArmor",
-                armorCirclesLeftLeg,
-                numDivsLeftLeg
-            )
-        );
-
-        // Right Leg Armor
-        legSection.appendChild(
-            armorDisplayCircles(
-                "armorDisplayLayout",
-                "rightLegArmor",
-                armorCirclesRightLeg,
-                numDivsRightLeg
-            )
-        );
-
-        // Numeric Values for Left and Right Leg
-        const leftLegNumeric = document.createElement("div");
-        leftLegNumeric.id = "leftLegArmorNumeric";
-        leftLegNumeric.textContent = armorCirclesLeftLeg;
-        legSection.appendChild(leftLegNumeric);
-
-        const rightLegNumeric = document.createElement("div");
-        rightLegNumeric.id = "rightLegArmorNumeric";
-        rightLegNumeric.textContent = armorCirclesRightLeg;
-        legSection.appendChild(rightLegNumeric);
-
-        // Append the leg section to the parent container
-        mechArmorContainer.appendChild(legSection);
-    }
-
-    // Method to update the heat sink/type/dissipation data
-    function updateHeatSinksJSON(
-        swapHeatSyncType = false,
-        newHeatSyncNum = -1
-    ) {
-        if (swapHeatSyncType === true) {
-            fullMechData.mechinternals_heatSinkType =
-                fullMechData.mechinternals_heatSinkType === "Singles"
-                    ? "Doubles"
-                    : "Singles";
-        }
-        if (newHeatSyncNum !== -1) {
-            fullMechData.mechinternals_heatSinksNum = newHeatSyncNum;
-        }
-
-        $("#heatSinkTypeDropDown").val(fullMechData.mechinternals_heatSinkType);
-        $("#heatSinkNumDropDown").val(fullMechData.mechinternals_heatSinksNum);
-        let heatSinkMulti =
-            $("#heatSinkTypeDropDown").val() === "Singles" ? 1 : 2;
-        $("#heatDissipation").html(
-            heatSinkMulti * parseInt($("#heatSinkNumDropDown").val(), 10)
-        );
-        updateTonnage();
+    // Build out engine tonnage options (once)
+    for (var i = 20; i <= 100; i += 5) {
+        var option = document.createElement("option");
+        option.text = i;
+        option.value = i;
+        option.id = "mechTonnageSelect_" + i;
+        document.getElementById("mechTonnageDropDown").appendChild(option);
     }
 
     // FN to get all data for the mech in one call
@@ -319,19 +285,17 @@ $(document).ready(function () {
             console.log(mechData);
 
             // Proceed to build out the views
+            updateMechMeta(mechData);
             displayArmorSection("mechArmor", mechData);
             updateHeatSinksJSON();
+            updateEngine();
+            updateEngineTonnageJSON();
         });
     };
     getFullMechData(); // Called on page load
 
-    /* These calls retrieve the initial values for Armor and engine for the mechs on page load.
-       passing 1 to updateEngine() tells it that we are not updating the engine type.
-    */
     // updateArmor("mechArmor");
-    updateTonnage();
-    updateMechMeta();
-    updateEngine(1);
+    // updateTonnage();
 
     function displayAllCrits() {
         displayCrits("leftArmCritTable", "mecharm", 0, "one", 4);
@@ -343,7 +307,6 @@ $(document).ready(function () {
         displayCrits("rightLegCritTable", "mechleg", 1, "eight", 4);
         displayCrits("centerCritTable", "mechtorsocenter", 2, "nine", 10);
     }
-
     displayAllCrits();
 
     $(".weaponChildLI").click(function () {
@@ -373,11 +336,7 @@ $(document).ready(function () {
                 }
             }
         };
-        xmlhttp7.open(
-            "GET",
-            "php/showWeaponInfo.php?weaponName=" + weaponName,
-            true
-        );
+        xmlhttp7.open("GET", "php/showWeaponInfo.php?weaponName=" + weaponName, true);
         xmlhttp7.send();
     });
 
@@ -501,9 +460,9 @@ $(document).ready(function () {
     });
 });
 
-function updateArmor(displayLocation) {
-    getFullMechData();
-}
+// function updateArmor(displayLocation) {
+//     getFullMechData();
+// }
 
 function changeMechStats(mechID, armorLocation, incDec, armorUpdateID) {
     var linked = "yes";
@@ -520,7 +479,7 @@ function changeMechStats(mechID, armorLocation, incDec, armorUpdateID) {
         if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
             //document.getElementById("test2").innerHTML=xmlhttp2.responseText;
             // updateArmor(armorUpdateID);
-            updateTonnage();
+            // updateTonnage();
         }
     };
 
@@ -539,32 +498,6 @@ function changeMechStats(mechID, armorLocation, incDec, armorUpdateID) {
     xmlhttp2.send();
 }
 
-function updateEngine(updatedEngine) {
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp3 = new XMLHttpRequest();
-    }
-    xmlhttp3.onreadystatechange = function () {
-        if (xmlhttp3.readyState === 4 && xmlhttp3.status === 200) {
-            document.getElementById("mechEngineDetails").innerHTML =
-                xmlhttp3.responseText;
-            updateEngineTonnageJSON();
-        }
-    };
-
-    if (updatedEngine === 1) {
-        xmlhttp3.open("GET", "php/getMechEngineData.php", true);
-        xmlhttp3.send();
-    } else {
-        xmlhttp3.open(
-            "GET",
-            "php/getMechEngineData.php?updatedEngine=" + updatedEngine,
-            true
-        );
-        xmlhttp3.send();
-    }
-}
-
 function updateTonnage() {
     if (window.XMLHttpRequest) {
         // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -576,117 +509,21 @@ function updateTonnage() {
 
             if (tonnageDataJSON.totalWeight > tonnageDataJSON.maxTonnage) {
                 document.getElementById("totalWeight").style.color = "red";
-                document.getElementById("totalWeightArmorPage").style.color =
-                    "red";
+                document.getElementById("totalWeightArmorPage").style.color = "red";
             } else {
                 document.getElementById("totalWeight").style.color = "white";
-                document.getElementById("totalWeightArmorPage").style.color =
-                    "black";
+                document.getElementById("totalWeightArmorPage").style.color = "black";
             }
 
             document.getElementById("totalWeight").innerHTML =
-                "<strong>Current Tonnage:</strong> " +
-                tonnageDataJSON.totalWeight +
-                "/" +
-                tonnageDataJSON.maxTonnage;
+                "<strong>Current Tonnage:</strong> " + tonnageDataJSON.totalWeight + "/" + tonnageDataJSON.maxTonnage;
             document.getElementById("totalWeightArmorPage").innerHTML =
-                "<strong>Current Tonnage:</strong> " +
-                tonnageDataJSON.totalWeight +
-                "/" +
-                tonnageDataJSON.maxTonnage;
+                "<strong>Current Tonnage:</strong> " + tonnageDataJSON.totalWeight + "/" + tonnageDataJSON.maxTonnage;
         }
     };
 
     xmlhttp6.open("GET", "php/getMechTonnage.php", true);
     xmlhttp6.send();
-}
-
-function updateMechMeta() {
-    if (window.XMLHttpRequest) {
-        xmlhttp166 = new XMLHttpRequest();
-    }
-    xmlhttp166.onreadystatechange = function () {
-        if (xmlhttp166.readyState === 4 && xmlhttp166.status === 200) {
-            var mechMetaResponse = JSON.parse(xmlhttp166.response);
-            $('input[name="mechName"]').val(mechMetaResponse.mechName);
-            $('input[name="mechModel"]').val(mechMetaResponse.mechModel);
-            $("#indMechEra").html(`Era: ${mechMetaResponse.era}`);
-            $("#indMechTechBase").html(
-                `Tech Base: ${mechMetaResponse.techBase}`
-            );
-            $("#indMechProdYear").html(
-                `Production Year: ${mechMetaResponse.productionYear}`
-            );
-        }
-    };
-
-    xmlhttp166.open("GET", "php/getMechMeta.php", true);
-    xmlhttp166.send();
-}
-
-function updateEngineTonnageJSON() {
-    var myArr;
-
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp4 = new XMLHttpRequest();
-    }
-    xmlhttp4.onreadystatechange = function () {
-        if (xmlhttp4.readyState === 4 && xmlhttp4.status === 200) {
-            var engineDataJSON = JSON.parse(xmlhttp4.response);
-
-            for (var i = 20; i <= 100; i += 5) {
-                var option = document.createElement("option");
-                option.text = i;
-                option.value = i;
-                option.id = "mechTonnageSelect_" + i;
-
-                if (i == engineDataJSON.mechTonnage) {
-                    option.selected = true;
-                }
-                document
-                    .getElementById("mechTonnageDropDown")
-                    .appendChild(option);
-            }
-
-            // THIS WILL NOT WORK LONG TERM, IT GETS IN RACE CONDITION WITH GETMECHDATA
-            // THIS MAY DISPLAY OR MAY NOT. IT IS 50/50
-            document.getElementById("mechEngineRating").innerHTML =
-                engineDataJSON.engineRating;
-
-            document.getElementById("internalsTonnage").innerHTML =
-                engineDataJSON.internalsTonnage;
-            document.getElementById("InternalsCriticalsTableData").innerHTML =
-                engineDataJSON.internalsCriticals;
-            document.getElementById("engineTonnage").innerHTML =
-                engineDataJSON.engineTonnage;
-            document.getElementById("engineCriticals").innerHTML =
-                engineDataJSON.engineCriticals;
-            document.getElementById("cockpitTonnage").innerHTML =
-                engineDataJSON.cockpitTonnage;
-            document.getElementById("cockpitCriticals").innerHTML =
-                engineDataJSON.cockpitCriticals;
-            document.getElementById("gyroTonnage").innerHTML =
-                engineDataJSON.gyroTonnage;
-            document.getElementById("gyroCriticals").innerHTML =
-                engineDataJSON.gyroCriticals;
-
-            document.getElementById("heatSinksTonnage").innerHTML =
-                engineDataJSON.heatSinksTonnage;
-            document.getElementById("heatSinksCriticals").innerHTML =
-                engineDataJSON.heatSinksCriticals;
-            document.getElementById("enhancementsTonnage").innerHTML =
-                engineDataJSON.enhancementsTonnage;
-            document.getElementById("enhancementsCriticals").innerHTML =
-                engineDataJSON.enhancementsCriticals;
-            document.getElementById("jumpJetsTonnage").innerHTML =
-                engineDataJSON.jumpJetsTonnage;
-            document.getElementById("jumpJetsCriticals").innerHTML =
-                engineDataJSON.jumpJetsCriticals;
-        }
-    };
-    xmlhttp4.open("GET", "php/getEngineDataJSON.php", true);
-    xmlhttp4.send();
 }
 
 $(document).ready(function () {
@@ -756,13 +593,7 @@ function makeDroppable() {
             }
 
             //prompt($(this).parent().attr('id'));
-            updateCrits(
-                modLocation,
-                altLocation,
-                $(ui.draggable).html(),
-                "add",
-                containerID
-            );
+            updateCrits(modLocation, altLocation, $(ui.draggable).html(), "add", containerID);
         },
     });
 
@@ -808,41 +639,40 @@ function makeDroppable() {
 
             //prompt(containerID);
             //prompt($(this).html());
-            updateCrits(
-                modLocation,
-                altLocation,
-                $(this).html(),
-                "remove",
-                containerID
-            );
+            updateCrits(modLocation, altLocation, $(this).html(), "remove", containerID);
             $(this).remove();
         },
     });
 }
 
-function changeMechTotalTonnage(mechWeight) {
-    if (window.XMLHttpRequest) {
-        // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp12 = new XMLHttpRequest();
-    }
+$(document).on("click", ".submitChanges", (e) => {
+    e.stopPropagation();
+    e.preventDefault();
 
-    xmlhttp12.onreadystatechange = function () {
-        if (xmlhttp12.readyState === 4 && xmlhttp12.status === 200) {
-            //document.getElementById('TEST2').innerHTML=xmlhttp12.responseText;
+    fullMechData.mechs_mechName = $("input[name='mechName']").val();
+    fullMechData.mechs_mechModel = $("input[name='mechModel']").val();
+    console.log(fullMechData);
 
-            //updateArmor("mechArmor");
-            updateTonnage();
-            updateEngine(1);
-
-            var docID = "mechTonnageSelect_" + mechWeight;
-            document.getElementById(docID).selected = true;
-        }
-    };
-
-    xmlhttp12.open(
-        "GET",
-        "php/changeMechTotalTonnage.php?tons=" + mechWeight,
-        true
-    );
-    xmlhttp12.send();
-}
+    $.ajax({
+        url: "php/updateFullMechDetails.php",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(fullMechData), // Convert the object to a JSON string
+        success: function (response) {
+            console.log(response);
+            if (response.success) {
+                console.log("Mech data saved successfully:", response.mechId);
+                const newURL = new URL(window.location.href); // Create a URL object with the current URL
+                newURL.searchParams.set("mechIDPassed", response.mechId); // Set or update the 'mechIDPassed' parameter
+                // Update the URL in the browser without reloading the page
+                window.history.replaceState(null, "", newURL.toString());
+            } else if (response.error) {
+                console.error("Error:", response.error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX request failed:", status, error);
+        },
+    });
+});

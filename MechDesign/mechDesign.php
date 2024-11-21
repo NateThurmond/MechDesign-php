@@ -114,7 +114,36 @@ $login = new Login();
                         </div>
                         
                         <h4>Engine Details</h4>
-                        <div class="detailsTextDisplay" id="mechEngineDetails"></div>
+                        <div class="detailsTextDisplay" id="mechEngineDetails">
+                            <p style="display: inline-block;"><strong>Engine: </strong> </p>
+                            <select name="engineType" id="engineDropDown" onchange="updateEngine(this.value);">
+                                <option value="XL Engine">XL Engine</option>
+                                <option value="Fusion Engine">Fusion Engine</option>
+                            </select>
+                            <div style="margin-top: -6px; height: 15px;">
+                                <p style="display: inline-block;">
+                                    <strong>Engine Rating: &nbsp</strong>
+                                </p>
+                                <p id="mechEngineRating" style="display: inline-block;"></p>
+                            </div>
+
+                            <div id=mechWalk>Walk:
+                                <p style="display: inline-block; font-weight: normal;"></p>
+                                <input type="text" class="movementValues" style="margin-left: 2px;" value="5" readonly/>
+                                <img src="images/upArrow2.png" class="upMovementArrow" id="upArrowWalk" />
+                                <img src="images/downArrow2.png" class="downMovementArrow" id="downArrowWalk" />
+                            </div>
+                            <div id=mechRun>Run:&nbsp
+                                <p style="display: inline-block; font-weight: normal;"></p>
+                                <input type="text" style="margin-left: 4px;"class="movementValues" value="8" readonly/>
+                            </div>
+                            <div id=mechJump>Jump:
+                                <p style="display: inline-block; font-weight: normal;"></p>
+                                <input type="text" class="movementValues" value="5" readonly/>
+                                <img src="images/upArrow2.png" class="upMovementArrow" id="upArrowJump" />
+                                <img src="images/downArrow2.png" class="downMovementArrow" id="downArrowJump" />
+                            </div>
+                        </div>
                         
                         <h4>Tonnage</h4>
                         <div class="detailsTextDisplay" id="mechTonnage">

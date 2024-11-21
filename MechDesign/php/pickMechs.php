@@ -10,6 +10,7 @@
     echo "<table class='mechPickTable' border='1'>
         <tr>
         <th>Mech Name</th>
+        <th>Mech Model</th>
         <th>Armor</th>
         <th>Movement</th>
         <th>Tonnage</th>
@@ -20,6 +21,7 @@
 
             echo "<tr>";
             echo "<td id='mechPickLink' >" . "<a href='mechDesign.php?mechIDPassed=" . $row['mechID'] . "'>" .  $row['mechName'] . "</a> </td>";
+            echo "<td>" . $row['mechModel'] . "</td>";
             echo "<td>" . $row['armor'] . "</td>";
             echo "<td>" . $row['mechWalk'] . " / " . $row['mechRun'] . " / " . $row['mechJump'] . "</td>";
             echo "<td>" . $row['maxTonnage'] . "</td>";

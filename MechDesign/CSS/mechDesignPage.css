@@ -26,11 +26,7 @@ input:focus::-webkit-input-placeholder {
     width: 315px;
     margin-right: 5px;
     padding: 5px;
-    background: linear-gradient(
-        to right,
-        #79796b,
-        #adad99
-    ); /* WILL TAKE OUT LATER */
+    background: linear-gradient(to right, #79796b, #adad99); /* WILL TAKE OUT LATER */
     height: 650px;
 }
 
@@ -137,7 +133,9 @@ h4 {
     margin: 0px 0px 0px 0px;
 }
 
-#mechWalk {
+#mechWalk,
+#mechRun,
+#mechJump {
     font-weight: bold;
     margin-top: 6px;
     height: 15px;

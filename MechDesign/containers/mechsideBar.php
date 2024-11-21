@@ -36,18 +36,11 @@
                     TR.className = "dropSlots";
                     var TD = document.createElement("td");
                     TD.className = "dropSlotsTD";
-                    //TD.text = critDetails[key];
-                    //TD.value = critDetails[key];
                     TD.innerHTML = critDetails[key];
                     
                     if (critDetails[key] == "overflow") {
                         TD.innerHTML = '&#8595'+'&nbsp&nbsp&nbsp'+'&#8595'+'&nbsp&nbsp&nbsp'+'&#8595';
                         TD.className = "dropSlotsUnmovable";
-                        /*TR.style.marginTop = "0px";
-                        TD.style.marginTop = "0px";
-                        TR.style.borderTopWidth = "0px";
-                        TD.style.borderTopWidth = "0px";*/
-                        
                     }
                     if (critDetails[key] == "") {
                         TD.className = "dropSlotsUnmovable";
