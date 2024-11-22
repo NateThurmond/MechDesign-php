@@ -191,6 +191,14 @@ CREATE TABLE `mechweapons` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- Reference data, not modified but used for other calcuations
+CREATE TABLE engineratingweights (
+    engineRating INT PRIMARY KEY,
+    regEngWeight FLOAT NOT NULL,
+    xlEngWeight FLOAT NOT NULL,
+    gyroWeight FLOAT NOT NULL
+);
+
 INSERT INTO `mecharm` (`mechID`, `partLeftorRight`) VALUES
 (1, 0),
 (2, 0),
@@ -266,3 +274,14 @@ INSERT INTO `mechweapons` (`weaponName`, `damage`, `heat`, `rangeMin`, `rangeSho
 ('Autocannon 10 Ammo', '', '', '', '', '', '', '4', '2', '', 'Ammunition', '3000'),
 ('Autocannon 20 Ammo', '', '', '', '', '', '', '6', '3', '', 'Ammunition', '3000'),
 ('Vehicle Flamer Ammo', '', '', '', '', '', '', '1', '1', '', 'Ammunition', '3000');
+
+-- Reference data, not modified but used for other calcuations
+INSERT INTO engineratingweights (engineRating, regEngWeight, xlEngWeight, gyroWeight) VALUES
+(100, 5.0, 2.5, 1.0),
+(200, 10.0, 5.0, 2.0),
+(300, 15.0, 7.5, 3.0),
+(400, 20.0, 10.0, 4.0),
+(500, 25.0, 12.5, 5.0),
+(600, 30.0, 15.0, 6.0),
+(700, 35.0, 17.5, 7.0),
+(800, 40.0, 20.0, 8.0);
