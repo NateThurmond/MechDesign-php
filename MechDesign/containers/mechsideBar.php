@@ -14,83 +14,97 @@
          xmlhttp.send();
     }
     
+    /* EXAMPLE pageload calls to this function */
+    // displayCrits("leftArmCritTable", "mecharm", 0, "one", 4);
+    // displayCrits("rightArmCritTable", "mecharm", 1, "two", 4);
+    // displayCrits("headCritTable", "mechhead", 2, "three", 5);
+    // displayCrits("leftTorsoCritTable", "mechtorso", 0, "four", 0);
+    // displayCrits("rightTorsoCritTable", "mechtorso", 1, "five", 0);
+    // displayCrits("leftLegCritTable", "mechleg", 0, "six", 4);
+    // displayCrits("rightLegCritTable", "mechleg", 1, "eight", 4);
+    // displayCrits("centerCritTable", "mechtorsocenter", 2, "nine", 10);
     function displayCrits(idToMod, mechPart, leftRight, xmlhttpNum, numUnmovable) {
         
-        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-           xmlhttpNum=new XMLHttpRequest();
-         }
-         xmlhttpNum.onreadystatechange=function() {
-            if (xmlhttpNum.readyState==4 && xmlhttpNum.status==200) {
-               
-                var critDetails = JSON.parse(xmlhttpNum.response);
-             
-                var myNode = document.getElementById(idToMod);
-                while (myNode.firstChild) {
-                    myNode.removeChild(myNode.firstChild);
-                }
-                
-                counter = numUnmovable;
-                for (var key in critDetails) {
-                    
-                    var TR = document.createElement("tr")
-                    TR.className = "dropSlots";
-                    var TD = document.createElement("td");
-                    TD.className = "dropSlotsTD";
-                    TD.innerHTML = critDetails[key];
-                    
-                    if (critDetails[key] == "overflow") {
-                        TD.innerHTML = '&#8595'+'&nbsp&nbsp&nbsp'+'&#8595'+'&nbsp&nbsp&nbsp'+'&#8595';
-                        TD.className = "dropSlotsUnmovable";
-                    }
-                    if (critDetails[key] == "") {
-                        TD.className = "dropSlotsUnmovable";
-                    }
-                    if (counter > 0) {
-                        TD.className = "dropSlotsUnmovable";
-                        TD.style.backgroundColor = "#FFAC30";
-                    }
-                    
-                    TD.style.textOverflow="visible";
-                    TD.style.whiteSpace="nowrap";
-                    
-                    document.getElementById(idToMod).appendChild(TR).appendChild(TD);
-                    counter--;
-                }
-                // This function has to be called here bc it can only be made
-                // droppable after being created.
-                makeDroppable();
+        let leftRightMod = '';
+        if (leftRight === 0) {
+            leftRightMod = 'Left';
+        } else if (leftRight === 1) {
+            leftRightMod = 'Right';
+        }
+        let finalPrefix = mechPart + leftRightMod + '_';
+
+        const critDetailsUnsorted = Object.fromEntries(Object.entries(fullMechData).filter((key, val) => {
+            return key[0].indexOf(finalPrefix) === 0 && key[0].includes('_slot');
+        }))
+        console.log(critDetailsUnsorted);
+
+        const sortedKeys = Object.keys(critDetailsUnsorted).sort((a, b) => {
+            const numA = parseInt(a.match(/slot(\d+)/)[1], 10);
+            const numB = parseInt(b.match(/slot(\d+)/)[1], 10);
+            return numA - numB;
+        });
+
+        // Step 2: Rebuild the object with sorted keys
+        const critDetails = Object.fromEntries(sortedKeys.map(key => [key, critDetailsUnsorted[key]]));
+
+        var myNode = document.getElementById(idToMod);
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
+
+        let counter = numUnmovable;
+        for (var key in critDetails) {
+            console.log(key);
+            var TR = document.createElement("tr")
+            TR.className = "dropSlots";
+            var TD = document.createElement("td");
+            TD.className = "dropSlotsTD";
+            TD.innerHTML = critDetails[key];
+
+            if (critDetails[key] == "overflow") {
+                TD.innerHTML = '&#8595'+'&nbsp&nbsp&nbsp'+'&#8595'+'&nbsp&nbsp&nbsp'+'&#8595';
+                TD.className = "dropSlotsUnmovable";
             }
-         }
-         xmlhttpNum.open("GET","php/displayCrits.php?mechPart="+mechPart+"&leftRight="+leftRight, true);
-         xmlhttpNum.send();
+            if (critDetails[key] == "") {
+                TD.className = "dropSlotsUnmovable";
+            }
+            if (counter > 0) {
+                TD.className = "dropSlotsUnmovable";
+                TD.style.backgroundColor = "#FFAC30";
+            }
+
+            TD.style.textOverflow="visible";
+            TD.style.whiteSpace="nowrap";
+
+            document.getElementById(idToMod).appendChild(TR).appendChild(TD);
+            counter--;
+        }
+
+        // This function has to be called here bc it can only be made
+        // droppable after being created.
+        // makeDroppable();
+
+        // "php/displayCrits.php?mechPart="+mechPart+"&leftRight="+leftRight
     }
     
     function updateCrits(mechPart, leftRight, critToAdd, addRemove, containerID) {
+
+        console.log(mechPart, leftRight, critToAdd, addRemove, containerID);
         
-        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-           xmlhttpNum2=new XMLHttpRequest();
-         }
-         xmlhttpNum2.onreadystatechange=function() {
-            if (xmlhttpNum2.readyState==4 && xmlhttpNum2.status==200) {
-                
-                critDetails = JSON.parse(xmlhttpNum2.response);
-                //prompt(critDetails.slotsRequired);
-                //prompt(critDetails.numUnmovable);
-                
-                    
-                //$( "#leftArmCritTable:nth-child(7)" ).style.background="purple";
-                
-                if (addRemove == "remove") {
-                    clearBlanks(mechPart, leftRight, containerID, critDetails.numUnmovable);
-                }
-                else {
-                    displayCrits(containerID, mechPart, leftRight, "seven", critDetails.numUnmovable);
-                    updateTonnage();
-                }
-            }
+        /*
+        critDetails = JSON.parse(xmlhttpNum2.response);
+        //prompt(critDetails.slotsRequired);
+        //prompt(critDetails.numUnmovable);
+        if (addRemove == "remove") {
+            clearBlanks(mechPart, leftRight, containerID, critDetails.numUnmovable);
         }
-         xmlhttpNum2.open("GET","php/updateCrits.php?mechPart="+mechPart+"&leftRight="+leftRight+"&critToAdd="+critToAdd+"&addRemove="+addRemove, true);
-         xmlhttpNum2.send();
+        else {
+            displayCrits(containerID, mechPart, leftRight, "seven", critDetails.numUnmovable);
+            updateTonnage();
+        }
+        */
+
+        // "php/updateCrits.php?mechPart="+mechPart+"&leftRight="+leftRight+"&critToAdd="+critToAdd+"&addRemove="+addRemove
     }
     
     function clearBlanks(mechPart, leftRight, containerID, numUnmove) {

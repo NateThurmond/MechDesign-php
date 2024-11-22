@@ -494,6 +494,7 @@ $(document).ready(function () {
             updateHeatSinksJSON();
             updateEngine();
             changeMechInternalTonnage(mechData.mechs_maxTonnage);
+            displayAllCrits();
         });
     };
     getFullMechData(); // Called on page load
@@ -508,7 +509,6 @@ $(document).ready(function () {
         displayCrits("rightLegCritTable", "mechleg", 1, "eight", 4);
         displayCrits("centerCritTable", "mechtorsocenter", 2, "nine", 10);
     }
-    displayAllCrits();
 
     $(".weaponChildLI").click(function () {
         var weaponName = $(this).attr("name");
