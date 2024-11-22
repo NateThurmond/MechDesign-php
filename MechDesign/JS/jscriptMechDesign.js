@@ -2,6 +2,44 @@ var getFullMechData; // FN to return full mech data
 var fullMechData = {}; // Returned from db on page load from above fn
 var armorCharts = {};
 
+const isMechInternalStructurePoints = {
+    20: { head: 3, centerTorso: 6, sideTorso: 5, arms: 3, legs: 4 },
+    25: { head: 3, centerTorso: 7, sideTorso: 6, arms: 4, legs: 5 },
+    30: { head: 3, centerTorso: 8, sideTorso: 6, arms: 5, legs: 7 },
+    40: { head: 3, centerTorso: 12, sideTorso: 8, arms: 6, legs: 9 },
+    45: { head: 3, centerTorso: 13, sideTorso: 9, arms: 7, legs: 10 },
+    50: { head: 3, centerTorso: 15, sideTorso: 10, arms: 8, legs: 11 },
+    55: { head: 3, centerTorso: 16, sideTorso: 11, arms: 9, legs: 12 },
+    60: { head: 3, centerTorso: 18, sideTorso: 12, arms: 10, legs: 13 },
+    65: { head: 3, centerTorso: 19, sideTorso: 13, arms: 11, legs: 14 },
+    70: { head: 3, centerTorso: 21, sideTorso: 14, arms: 11, legs: 15 },
+    75: { head: 3, centerTorso: 23, sideTorso: 15, arms: 12, legs: 16 },
+    80: { head: 3, centerTorso: 24, sideTorso: 16, arms: 13, legs: 17 },
+    85: { head: 3, centerTorso: 26, sideTorso: 17, arms: 14, legs: 18 },
+    90: { head: 3, centerTorso: 27, sideTorso: 18, arms: 15, legs: 19 },
+    95: { head: 3, centerTorso: 29, sideTorso: 19, arms: 16, legs: 20 },
+    100: { head: 3, centerTorso: 30, sideTorso: 20, arms: 17, legs: 21 },
+};
+
+const clanMechInternalStructurePoints = {
+    20: { head: 3, centerTorso: 6, sideTorso: 4, arms: 3, legs: 4 },
+    25: { head: 3, centerTorso: 8, sideTorso: 5, arms: 4, legs: 5 },
+    30: { head: 3, centerTorso: 10, sideTorso: 6, arms: 5, legs: 6 },
+    40: { head: 3, centerTorso: 12, sideTorso: 8, arms: 6, legs: 8 },
+    45: { head: 3, centerTorso: 14, sideTorso: 9, arms: 7, legs: 9 },
+    50: { head: 3, centerTorso: 16, sideTorso: 10, arms: 8, legs: 10 },
+    55: { head: 3, centerTorso: 17, sideTorso: 11, arms: 9, legs: 11 },
+    60: { head: 3, centerTorso: 19, sideTorso: 12, arms: 10, legs: 12 },
+    65: { head: 3, centerTorso: 20, sideTorso: 13, arms: 11, legs: 13 },
+    70: { head: 3, centerTorso: 22, sideTorso: 15, arms: 11, legs: 15 },
+    75: { head: 3, centerTorso: 24, sideTorso: 16, arms: 12, legs: 16 },
+    80: { head: 3, centerTorso: 26, sideTorso: 17, arms: 13, legs: 17 },
+    85: { head: 3, centerTorso: 28, sideTorso: 18, arms: 14, legs: 18 },
+    90: { head: 3, centerTorso: 30, sideTorso: 19, arms: 15, legs: 19 },
+    95: { head: 3, centerTorso: 32, sideTorso: 20, arms: 16, legs: 20 },
+    100: { head: 3, centerTorso: 34, sideTorso: 22, arms: 17, legs: 22 },
+};
+
 // FUNCTION TO DISPLAY ARMOR POINTS DYNAMICALLY AND EVENLY ACROSS MULTIPLE ROWS
 function armorDisplayCircles(classToMod, idToMod, armorCircles, divLines) {
     const container = document.createElement("div");
