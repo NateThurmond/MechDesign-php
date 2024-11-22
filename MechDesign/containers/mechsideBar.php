@@ -311,7 +311,8 @@
         </div>
         
         <p class='selector' id='criticalSelector'>Save Mech</p>
-        <div class='popoutClass popoutTab4'>
+        <!-- This pop-out isn't fully thought out so just tie it to the other save button -->
+        <!-- <div class='popoutClass popoutTab4'> -->
 
         </div>
         

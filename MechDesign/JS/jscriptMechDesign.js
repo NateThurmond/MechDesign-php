@@ -999,7 +999,7 @@ $(document).on("click", ".downMovementArrow", function () {
     updateEngine(false);
 });
 
-$(document).on("click", ".submitChanges", (e) => {
+$(document).on("click", ".submitChanges, #criticalSelector", (e) => {
     e.stopPropagation();
     e.preventDefault();
 
