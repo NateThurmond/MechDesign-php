@@ -145,11 +145,16 @@ $login = new Login();
             <p class='selector' id='armorSelector'>Armor</p>
             <div class='popoutClass popoutTab2'>Increase External Armor
                 <hr class='dividerBar' style="margin-top: -2px;" />
+
+                <span id="torsoLeftInt" class="internalStructurePoints"
+                    style="margin-top: 95px; margin-left: -63px;">25</span>
                 <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftTorsoInc"
                     onclick="changeMechStats('torsoLeftArmor', 'increase', 'torso');" />
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftTorsoDec"
                     onclick="changeMechStats('torsoLeftArmor', 'decrease', 'torso');" />
 
+                <span id="torsoRightInt" class="internalStructurePoints"
+                    style="margin-top: 95px; margin-left: 42px;">25</span>
                 <img src="images/upRedArrow.png" class="downMovementArrow" id="RightTorsoInc"
                     onclick="changeMechStats('torsoRightArmor', 'increase', 'torso');" />
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="RightTorsoDec"
@@ -170,31 +175,43 @@ $login = new Login();
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="centerRearTorsoDec"
                     onclick="changeMechStats('rearCenterArmor', 'decrease', 'center');" />
 
+                <span id="legRightInt" class="internalStructurePoints"
+                    style="margin-top: 287px; margin-left: 47px;"></span>
                 <img src="images/upRedArrow.png" class="downMovementArrow" id="RightLegInc"
                     onclick="changeMechStats('legRightArmor', 'increase', 'leg');" />
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="RightLegDec"
                     onclick="changeMechStats('legRightArmor', 'decrease', 'leg');" />
 
+                <span id="legLeftInt" class="internalStructurePoints"
+                    style="margin-top: 286px; margin-left: -71px;"></span>
                 <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftLegInc"
                     onclick="changeMechStats('legLeftArmor', 'increase', 'leg');" />
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftLegDec"
                     onclick="changeMechStats('legLeftArmor', 'decrease', 'leg');" />
 
+                <span id="centerArmorInt" class="internalStructurePoints"
+                    style="margin-top: 129px; margin-left: -12px;"></span>
                 <img src="images/upRedArrow.png" class="downMovementArrow" id="centerTorsoInc"
                     onclick="changeMechStats('centerArmor', 'increase', 'center');" />
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="centerTorsoDec"
                     onclick="changeMechStats('centerArmor', 'decrease', 'center');" />
 
+                <span id="headArmorInt" class="internalStructurePoints"
+                    style="margin-top: 88px; margin-left: -12px;"></span>
                 <img src="images/upRedArrow.png" class="downMovementArrow" id="headInc"
                     onclick="changeMechStats('headArmor', 'increase', 'head');" />
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="headDec"
                     onclick="changeMechStats('headArmor', 'decrease', 'head');" />
 
+                <span id="armLeftInt" class="internalStructurePoints"
+                    style="margin-top: 94px; margin-left: -116px;"></span>
                 <img src="images/upRedArrow.png" class="downMovementArrow" id="LeftArmInc"
                     onclick="changeMechStats('armLeftArmor', 'increase', 'arm');" />
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="LeftArmDec"
                     onclick="changeMechStats('armLeftArmor', 'decrease', 'arm');" />
 
+                <span id="armRightInt" class="internalStructurePoints"
+                    style="margin-top: 94px; margin-left: 95px;"></span>
                 <img src="images/upRedArrow.png" class="downMovementArrow" id="RightArmInc"
                     onclick="changeMechStats('armRightArmor', 'increase', 'arm');" />
                 <img src="images/downRedArrow.png" class="downMovementArrow" id="RightArmDec"

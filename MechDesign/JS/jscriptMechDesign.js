@@ -1077,6 +1077,19 @@ function updateTonnage() {
     let externalArmorWeight = Math.ceil(externalArmor / 8) / 2;
     let totalWeight = externalArmorWeight + internalWeight;
 
+    let internalStrucPtsToUse =
+        fullMechData.mechs_techBase === "Clan" ? clanMechInternalStructurePoints : isMechInternalStructurePoints;
+    internalStrucPtsToUse = internalStrucPtsToUse[maxTonnage];
+
+    $("#torsoLeftInt").html(internalStrucPtsToUse.sideTorso);
+    $("#torsoRightInt").html(internalStrucPtsToUse.sideTorso);
+    $("#legRightInt").html(internalStrucPtsToUse.legs);
+    $("#legLeftInt").html(internalStrucPtsToUse.legs);
+    $("#centerArmorInt").html(internalStrucPtsToUse.centerTorso);
+    $("#headArmorInt").html(internalStrucPtsToUse.head);
+    $("#armLeftInt").html(internalStrucPtsToUse.arms);
+    $("#armRightInt").html(internalStrucPtsToUse.arms);
+
     if (totalWeight > maxTonnage) {
         document.getElementById("totalWeight").style.color = "red";
         document.getElementById("totalWeightArmorPage").style.color = "red";
