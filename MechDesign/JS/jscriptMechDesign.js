@@ -45,32 +45,32 @@ const clanMechInternalStructurePoints = {
 // Approximate num of avail slots per weight class
 const mechSlotByWeightClass = {
     Light: {
-        mecharm: 3,
-        mechhead: 1,
-        mechtorso: 2,
-        mechtorsocenter: 2,
-        mechleg: 0,
-    },
-    Medium: {
         mecharm: 4,
         mechhead: 1,
-        mechtorso: 3,
-        mechtorsocenter: 3,
-        mechleg: 0,
+        mechtorso: 4,
+        mechtorsocenter: 5,
+        mechleg: 2,
     },
-    Heavy: {
+    Medium: {
         mecharm: 5,
         mechhead: 1,
-        mechtorso: 5,
-        mechtorsocenter: 4,
-        mechleg: 1,
+        mechtorso: 6,
+        mechtorsocenter: 7,
+        mechleg: 3,
+    },
+    Heavy: {
+        mecharm: 7,
+        mechhead: 1,
+        mechtorso: 9,
+        mechtorsocenter: 10,
+        mechleg: 4,
     },
     Assault: {
-        mecharm: 6,
+        mecharm: 8,
         mechhead: 1,
-        mechtorso: 7,
-        mechtorsocenter: 6,
-        mechleg: 1,
+        mechtorso: 12,
+        mechtorsocenter: 12,
+        mechleg: 5,
     },
 };
 
