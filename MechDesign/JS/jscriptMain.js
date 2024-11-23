@@ -10,13 +10,7 @@ const mechIDPassed = getQueryParam("mechIDPassed");
 // Override the XMLHttpRequest `open` method to always pass our mechID
 (function () {
     const originalOpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function (
-        method,
-        url,
-        async,
-        user,
-        password
-    ) {
+    XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
         if (mechIDPassed) {
             // Append `mechIDPassed` to the request URL
             const separator = url.includes("?") ? "&" : "?";
@@ -26,6 +20,50 @@ const mechIDPassed = getQueryParam("mechIDPassed");
         originalOpen.call(this, method, url, async, user, password);
     };
 })();
+
+function checkFormData() {
+    var newUserName = document.forms["registerForm"]["registerName"].value;
+    var newUserEmail = document.forms["registerForm"]["registerEmail"].value;
+    var newRegisterPassword = document.forms["registerForm"]["registerPassword"].value;
+    var newConfirmPassword = document.forms["registerForm"]["confirmPassword"].value;
+
+    if (window.XMLHttpRequest) {
+        // code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+    }
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            document.getElementById("registerBox").innerHTML = xmlhttp.responseText;
+        }
+    };
+    xmlhttp.open(
+        "POST",
+        "php/register.php?name=" +
+            newUserName +
+            "&pass=" +
+            newRegisterPassword +
+            "&confirmPass=" +
+            newConfirmPassword +
+            "&email=" +
+            newUserEmail,
+        true
+    );
+    xmlhttp.send();
+}
+
+function clearForm() {
+    $("#registerBox").fadeToggle("slow");
+
+    $("input[type=text]").each(function () {
+        $("#registerName").val("");
+        $("#myusername").val("");
+        $("#registerEmail").val("");
+        $("#registerPassword").val("");
+        $("#mypassword").val("");
+        $("#confirmPassword").val("");
+        $(".registerError").empty();
+    });
+}
 
 $(document).ready(function () {
     /* Set error messages related to log in and log out
