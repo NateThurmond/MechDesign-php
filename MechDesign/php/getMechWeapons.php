@@ -7,8 +7,9 @@ $res = mysqli_query(
     $conn,
     "
     SELECT weaponName, damage, heat, rangeMin, rangeShort, rangeMed, rangeLong,
-        tons, slotsRequired, ammoNeeded, weaponType, availableDate
-    FROM mechweapons WHERE 1
+        tons, slotsRequired, ammoNeeded, weaponType, availableDate, techBase
+    FROM mechweapons
+    ORDER BY weaponName ASC
     ;
     "
 );
