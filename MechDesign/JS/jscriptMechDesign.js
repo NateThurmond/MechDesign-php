@@ -4,6 +4,34 @@ var armorCharts = {};
 var dataByWeaponName = {};
 var weaponArray = [];
 
+function buildWeaponLis() {
+    weaponArray.forEach((weaponElem) => {
+        if (weaponElem.techBase !== fullMechData.mechs_techBase) return;
+        if ($(`.wc_` + weaponElem.weaponType).length === 0) return;
+        let wLi = `<li class="weaponChildLI" name="${weaponElem.weaponName}">${weaponElem.weaponName}</li>`;
+        $(`.wc_` + weaponElem.weaponType).append(wLi);
+    });
+
+    $(".weaponChildLI").draggable({
+        revert: true,
+        revertDuration: 0,
+        cursor: "move",
+        start: function (event, ui) {
+            $(this).toggleClass("draggingWeapon");
+            $(this).css("width", "80px");
+
+            mousePos = event.pageX - 224;
+            $(this).css("margin-left", mousePos);
+        },
+        stop: function (event, ui) {
+            $(this).toggleClass("draggingWeapon");
+            $(this).css("margin-left", "0px");
+            $(this).css("width", "auto");
+            $(this).css("height", "auto");
+        },
+    });
+}
+
 const isMechInternalStructurePoints = {
     20: { head: 3, centerTorso: 6, sideTorso: 5, arms: 3, legs: 4 },
     25: { head: 3, centerTorso: 7, sideTorso: 6, arms: 4, legs: 5 },
@@ -381,42 +409,55 @@ function changeMechInternalTonnage(mechWeight) {
 
     let walkSpeed = parseInt($("#mechWalk").find(".movementValues").val(), 10);
 
-    // Calculate the engine rating (assumes walking speed of 4)
+    // Calculate the engine rating
     const engineRating = mechWeight * walkSpeed;
 
-    // Internal Structure Weight: 10% of mech weight
-    const internalStructure = mechWeight * 0.1;
-
-    // Engine Weight and Criticals (based on official table approximations)
+    // Engine Weight and Criticals
     let engineWeight, engineCrits;
     if (fullMechData.mechengine_engineName === "Fusion Engine") {
-        engineWeight = getFusionEngineWeight(engineRating, mechWeight);
-        engineCrits = 6; // Fixed: 2 in each torso section
+        engineWeight = getFusionEngineWeight(engineRating);
+        engineCrits = 6; // 2 in each torso section
     } else if (fullMechData.mechengine_engineName === "XL Engine") {
-        engineWeight = getXLEngineWeight(engineRating, mechWeight);
-        engineCrits = 12; // Fixed: 4 in each torso section
+        engineWeight = getXLEngineWeight(engineRating);
+        engineCrits = 12; // 4 in each torso section
     }
 
-    // Gyro Weight and Slots
-    const gyroWeight = Math.ceil((engineRating / 100) * 2 * 2) / 2;
+    // Gyro Weight
+    let gyroWeight = getGyroWeight(engineRating);
     const gyroCrits = 4; // Standard gyro
 
-    // Cockpit Weight and Slots
-    const cockpitWeight = 3;
-    const cockpitCrits = 1; // Always in the head
+    // Cockpit Weight
+    const cockpitWeight = 3; // Fixed for all mechs
+    const cockpitCrits = 1;
 
-    // Heat Sink Weight and Slots
+    // Heat Sink Weight
     const extraHeatSinkWeight = Math.max(fullMechData.mechinternals_heatSinksNum - 10, 0);
-    const heatSinkCrits =
-        fullMechData.mechinternals_heatSinksNum > 10 ? fullMechData.mechinternals_heatSinksNum - 10 : 0;
+    let heatSinkCrits = Math.max(0, parseFloat(fullMechData.mechinternals_heatSinksNum, 10) - 10);
+    heatSinkCrits = fullMechData.mechs_techBase === "Clan" ? heatSinkCrits : heatSinkCrits * 3;
 
-    // Total Weight
-    const totalWeight = internalStructure + engineWeight + gyroWeight + cockpitWeight + extraHeatSinkWeight;
+    // Optional Jump Jets (if applicable) - Technically not accurate to just set 1 ton for jump-jets but works for most mechs
+    const jumpJetWeight = parseFloat(parseInt($("#mechJump").find(".movementValues").val(), 10), 10);
 
-    // Total Criticals
-    const totalCriticals = engineCrits + gyroCrits + cockpitCrits + heatSinkCrits;
+    const structureType = fullMechData.mechinternals_internalStructureType || "Standard";
+    const internalStructure = Math.round(
+        calculateInternalStructureWeight(mechWeight, structureType, fullMechData.mechs_techBase)
+    );
 
-    // Return all calculated values
+    // Total Internal Tonnage (including all components)
+    const totalInternalTonnage =
+        internalStructure + engineWeight + gyroWeight + cockpitWeight + extraHeatSinkWeight + jumpJetWeight;
+
+    // Update mech data
+    fullMechData.mechinternals_internalStructureTonnage = internalStructure.toFixed(1);
+    fullMechData.mechinternals_engineTonnage = engineWeight.toFixed(1);
+    fullMechData.mechinternals_gyroTonnage = gyroWeight.toFixed(1);
+    fullMechData.mechinternals_cockpitTonnage = cockpitWeight.toFixed(1);
+    fullMechData.mechinternals_heatSinksTonnage = extraHeatSinkWeight.toFixed(1);
+    fullMechData.mechinternals_jumpJetsTonnage = jumpJetWeight.toFixed(1);
+
+    // Set Total Internal Tonnage
+    fullMechData.mechinternals_totalInternalTonnage = totalInternalTonnage.toFixed(1);
+
     console.log({
         mechWeight,
         engineName: fullMechData.mechengine_engineName,
@@ -426,53 +467,9 @@ function changeMechInternalTonnage(mechWeight) {
         gyroWeight: gyroWeight.toFixed(1),
         cockpitWeight: cockpitWeight.toFixed(1),
         extraHeatSinkWeight: extraHeatSinkWeight.toFixed(1),
-        totalWeight: totalWeight.toFixed(1),
-        engineCrits,
-        gyroCrits,
-        cockpitCrits,
-        heatSinkCrits,
-        totalCriticals,
+        jumpJetWeight: jumpJetWeight.toFixed(1),
+        totalInternalTonnage: totalInternalTonnage.toFixed(1),
     });
-
-    // fullMechData.mechinternals_totalInternalTonnage = internalStructure.toFixed(1);
-    fullMechData.mechinternals_engineTonnage = engineWeight.toFixed(1);
-
-    // fullMechData.mechinternals_internalStructureTonnage = totalWeight.toFixed(1);
-    // fullMechData.mechinternals_internalStructureCriticals = totalCriticals;
-
-    fullMechData.mechinternals_gyroTonnage = gyroWeight.toFixed(1);
-    fullMechData.mechinternals_cockpitTonnage = cockpitWeight.toFixed(1);
-    fullMechData.mechinternals_heatSinksTonnage = extraHeatSinkWeight.toFixed(1);
-    fullMechData.mechinternals_engineCriticals = engineCrits;
-    fullMechData.mechinternals_gyroCriticals = gyroCrits;
-    fullMechData.mechinternals_cockpitCriticals = cockpitCrits;
-    fullMechData.mechinternals_heatSinksCriticals = heatSinkCrits;
-    fullMechData.mechinternals_jumpJetsNum = $("#mechJump").find(".movementValues").val();
-    fullMechData.mechinternals_jumpJetsTonnage = $("#mechJump").find(".movementValues").val();
-    fullMechData.mechinternals_jumpJetsCriticals = Math.ceil(fullMechData.mechinternals_jumpJetsNum / 3);
-
-    fullMechData.mechinternals_internalStructureTonnage =
-        parseInt(fullMechData.mechinternals_engineTonnage, 10) +
-        parseInt(fullMechData.mechinternals_gyroTonnage, 10) +
-        parseInt(fullMechData.mechinternals_cockpitTonnage, 10) +
-        parseInt(fullMechData.mechinternals_heatSinksTonnage, 10) +
-        parseInt(1, 10) +
-        parseInt(fullMechData.mechinternals_jumpJetsNum, 10);
-
-    // let externalArmor = fullMechData.mechexternalarmor_mechArmorTotal;
-    // let maxTonnage = fullMechData.mechs_maxTonnage;
-    // let externalArmorWeight = Math.ceil(fullMechData.mechexternalarmor_mechArmorTotal / 8) / 2;
-    fullMechData.mechinternals_totalInternalTonnage =
-        fullMechData.mechinternals_internalStructureTonnage +
-        Math.ceil(fullMechData.mechexternalarmor_mechArmorTotal / 8) / 2;
-
-    fullMechData.mechinternals_internalStructureCriticals =
-        parseInt(fullMechData.mechinternals_engineCriticals, 10) +
-        parseInt(fullMechData.mechinternals_gyroCriticals, 10) +
-        parseInt(fullMechData.mechinternals_cockpitCriticals, 10) +
-        parseInt(fullMechData.mechinternals_heatSinksCriticals, 10) +
-        parseInt(1, 10) +
-        parseInt(fullMechData.mechinternals_jumpJetsCriticals, 10);
 
     updateEngineTonnageJSON();
     updateTonnage();
@@ -480,75 +477,273 @@ function changeMechInternalTonnage(mechWeight) {
     displayAllCrits();
 }
 
-function getFusionEngineWeight(engineRating, mechWeight) {
-    // Weight table with mech weight as key and array of weights as values for different engine ratings
-    const weightTable = {
-        20: [1.5, 2, 2.5, 3, 3.5, 4],
-        25: [2, 2.5, 3, 3.5, 4, 4.5],
-        30: [2.5, 3, 3.5, 4, 4.5, 5],
-        35: [3, 3.5, 4, 4.5, 5, 5.5],
-        40: [3.5, 4, 4.5, 5, 5.5, 6],
-        45: [4, 4.5, 5, 5.5, 6, 6.5],
-        50: [4.5, 5, 5.5, 6, 6.5, 7],
-        55: [5, 5.5, 6, 6.5, 7, 7.5],
-        60: [5.5, 6, 6.5, 7, 7.5, 8],
-        65: [6, 6.5, 7, 7.5, 8, 8.5],
-        70: [6.5, 7, 7.5, 8, 8.5, 9],
-        75: [7, 7.5, 8, 8.5, 9, 9.5],
-        80: [7.5, 8, 8.5, 9, 9.5, 10],
-        85: [8, 8.5, 9, 9.5, 10, 10.5],
-        90: [8.5, 9, 9.5, 10, 10.5, 11],
-        95: [9, 9.5, 10, 10.5, 11, 11.5],
-        100: [9.5, 10, 10.5, 11, 11.5, 12],
-    };
+const standardEngineWeights = {
+    100: 3.0,
+    105: 3.5,
+    110: 3.5,
+    115: 4.0,
+    120: 4.0,
+    125: 4.0,
+    130: 4.5,
+    135: 4.5,
+    140: 5.0,
+    145: 5.0,
+    150: 5.5,
+    155: 5.5,
+    160: 6.0,
+    165: 6.0,
+    170: 6.5,
+    175: 7.0,
+    180: 7.0,
+    185: 7.5,
+    190: 7.5,
+    195: 8.0,
+    200: 8.5,
+    205: 8.5,
+    210: 9.0,
+    215: 9.5,
+    220: 10.0,
+    225: 10.0,
+    230: 10.5,
+    235: 11.0,
+    240: 11.5,
+    245: 12.0,
+    250: 12.5,
+    255: 13.0,
+    260: 13.5,
+    265: 14.0,
+    270: 14.5,
+    275: 15.5,
+    280: 16.0,
+    285: 16.5,
+    290: 17.5,
+    295: 18.0,
+    300: 19.0,
+    305: 19.5,
+    310: 20.5,
+    315: 21.5,
+    320: 22.5,
+    325: 23.5,
+    330: 24.5,
+    335: 25.5,
+    340: 27.0,
+    345: 28.5,
+    350: 29.5,
+    355: 31.5,
+    360: 33.0,
+    365: 34.5,
+    370: 37.0,
+    375: 38.5,
+    380: 41.0,
+    385: 43.5,
+    390: 46.0,
+    395: 49.0,
+    400: 52.5,
+};
 
-    // Determine engine rating index based on engine rating
-    let ratingIndex;
-    if (engineRating <= 80) {
-        ratingIndex = 0; // Rating 80
-    } else if (engineRating <= 100) {
-        ratingIndex = 1; // Rating 100
-    } else if (engineRating <= 120) {
-        ratingIndex = 2; // Rating 120
-    } else if (engineRating <= 140) {
-        ratingIndex = 3; // Rating 140
-    } else if (engineRating <= 160) {
-        ratingIndex = 4; // Rating 160
-    } else {
-        ratingIndex = 5; // Rating 180
-    }
+const xlEngineWeights = {
+    100: 1.5,
+    105: 2.0,
+    110: 2.0,
+    115: 2.0,
+    120: 2.0,
+    125: 2.0,
+    130: 2.5,
+    135: 2.5,
+    140: 2.5,
+    145: 2.5,
+    150: 3.0,
+    155: 3.0,
+    160: 3.0,
+    165: 3.0,
+    170: 3.0,
+    175: 3.5,
+    180: 3.5,
+    185: 4.0,
+    190: 4.0,
+    195: 4.0,
+    200: 4.5,
+    205: 4.5,
+    210: 4.5,
+    215: 5.0,
+    220: 5.0,
+    225: 5.0,
+    230: 5.5,
+    235: 5.5,
+    240: 6.0,
+    245: 6.0,
+    250: 6.5,
+    255: 6.5,
+    260: 7.0,
+    265: 7.0,
+    270: 7.5,
+    275: 8.0,
+    280: 8.0,
+    285: 8.5,
+    290: 9.0,
+    295: 9.0,
+    300: 9.5,
+    305: 10.0,
+    310: 10.5,
+    315: 11.0,
+    320: 11.5,
+    325: 12.0,
+    330: 12.5,
+    335: 13.0,
+    340: 13.5,
+    345: 14.5,
+    350: 15.0,
+    355: 16.0,
+    360: 16.5,
+    365: 17.5,
+    370: 18.5,
+    375: 19.5,
+    380: 20.5,
+    385: 22.0,
+    390: 23.0,
+    395: 24.5,
+    400: 26.5,
+};
 
-    // If mechWeight is higher than 100, use the closest match from the table
-    if (mechWeight > 100) {
-        mechWeight = 100; // Cap to 100 tons for now as there is no direct match in the table for larger weights
-    }
+const gyroWeights = {
+    100: 1.0,
+    105: 2.0,
+    110: 2.0,
+    115: 2.0,
+    120: 2.0,
+    125: 2.0,
+    130: 2.0,
+    135: 2.0,
+    140: 2.0,
+    145: 2.0,
+    150: 2.0,
+    155: 2.0,
+    160: 2.0,
+    165: 2.0,
+    170: 2.0,
+    175: 2.0,
+    180: 2.0,
+    185: 2.0,
+    190: 2.0,
+    195: 2.0,
+    200: 2.0,
+    205: 3.0,
+    210: 3.0,
+    215: 3.0,
+    220: 3.0,
+    225: 3.0,
+    230: 3.0,
+    235: 3.0,
+    240: 3.0,
+    245: 3.0,
+    250: 3.0,
+    255: 3.0,
+    260: 3.0,
+    265: 3.0,
+    270: 3.0,
+    275: 3.0,
+    280: 3.0,
+    285: 3.0,
+    290: 3.0,
+    295: 3.0,
+    300: 3.0,
+    305: 4.0,
+    310: 4.0,
+    315: 4.0,
+    320: 4.0,
+    325: 4.0,
+    330: 4.0,
+    335: 4.0,
+    340: 4.0,
+    345: 4.0,
+    350: 4.0,
+    355: 4.0,
+    360: 4.0,
+    365: 4.0,
+    370: 4.0,
+    375: 4.0,
+    380: 4.0,
+    385: 4.0,
+    390: 4.0,
+    395: 4.0,
+    400: 4.0,
+};
 
-    // Get the engine weight based on the mech weight and the rating index
-    return weightTable[mechWeight][ratingIndex];
+function getFusionEngineWeight(engineRating) {
+    return standardEngineWeights[Math.min(engineRating, 400)] || 0;
 }
 
-function getXLEngineWeight(engineRating, mechWeight) {
-    // XL engines are 50% lighter but require extra critical slots
-    return getFusionEngineWeight(engineRating, mechWeight) * 0.5;
+function getXLEngineWeight(engineRating) {
+    return xlEngineWeights[Math.min(engineRating, 400)] || 0;
+}
+
+function getGyroWeight(engineRating) {
+    return gyroWeights[engineRating] || 0;
+}
+
+function calculateInternalStructureWeight(mechWeight, structureType = "Standard", techBase = "Clan") {
+    // Internal structure weight modifiers
+    const internalStructureModifiers = {
+        Standard: 1, // 10% of 'Mech weight
+        "Endo Steel": 0.5, // 50% of the standard weight
+    };
+
+    if (!internalStructureModifiers[structureType]) {
+        throw new Error("Invalid internal structure type");
+    }
+
+    const baseWeight = mechWeight * 0.1; // 10% of 'Mech weight
+    const modifier = internalStructureModifiers[structureType];
+    return baseWeight * modifier;
 }
 
 function updateEngineTonnageJSON() {
+    /*
+        Example known values
+
+        Mad DOG
+        Component       Tons    Crits
+        Internals       6.0     25
+        Engine          9.5     12
+        Gyro            3.0     4
+        Cockpit         3.0     1
+        Heat Sinks      2.0     2
+        Enhancements    0.0     0
+        JumpJets        0.0     0
+        Total           23.5    44
+
+        Mad CAT
+        Component       Tons    Crits
+        Internals       7.5     25
+        Engine          19.5    12
+        Gyro            4.0     4
+        Cockpit         3.0     1
+        Heat Sinks      3.5     7
+        Enhancements    0.0     0
+        JumpJets        0.0     0
+        Total           29.75   49
+    */
+
     $("#mechTonnageDropDown").val(fullMechData.mechs_maxTonnage);
     document.getElementById("mechEngineRating").innerHTML = fullMechData.mechengine_engineRating;
+
+    // Tonage
     document.getElementById("internalsTonnage").innerHTML = fullMechData.mechinternals_internalStructureTonnage;
+    document.getElementById("engineTonnage").innerHTML = fullMechData.mechinternals_engineTonnage;
+    document.getElementById("gyroTonnage").innerHTML = fullMechData.mechinternals_gyroTonnage;
+    document.getElementById("cockpitTonnage").innerHTML = fullMechData.mechinternals_cockpitTonnage;
+    document.getElementById("heatSinksTonnage").innerHTML = fullMechData.mechinternals_heatSinksTonnage;
+    document.getElementById("enhancementsTonnage").innerHTML = fullMechData.mechinternals_enhancementsTonnage;
+    document.getElementById("jumpJetsTonnage").innerHTML = fullMechData.mechinternals_jumpJetsTonnage;
+
+    // Crits
     document.getElementById("InternalsCriticalsTableData").innerHTML =
         fullMechData.mechinternals_internalStructureCriticals;
-    document.getElementById("engineTonnage").innerHTML = fullMechData.mechinternals_engineTonnage;
     document.getElementById("engineCriticals").innerHTML = fullMechData.mechinternals_engineCriticals;
-    document.getElementById("cockpitTonnage").innerHTML = fullMechData.mechinternals_cockpitTonnage;
-    document.getElementById("cockpitCriticals").innerHTML = fullMechData.mechinternals_cockpitCriticals;
-    document.getElementById("gyroTonnage").innerHTML = fullMechData.mechinternals_gyroTonnage;
     document.getElementById("gyroCriticals").innerHTML = fullMechData.mechinternals_gyroCriticals;
-    document.getElementById("heatSinksTonnage").innerHTML = fullMechData.mechinternals_heatSinksTonnage;
+    document.getElementById("cockpitCriticals").innerHTML = fullMechData.mechinternals_cockpitCriticals;
     document.getElementById("heatSinksCriticals").innerHTML = fullMechData.mechinternals_heatSinksCriticals;
-    document.getElementById("enhancementsTonnage").innerHTML = fullMechData.mechinternals_enhancementsTonnage;
     document.getElementById("enhancementsCriticals").innerHTML = fullMechData.mechinternals_enhancementsCriticals;
-    document.getElementById("jumpJetsTonnage").innerHTML = fullMechData.mechinternals_jumpJetsTonnage;
     document.getElementById("jumpJetsCriticals").innerHTML = fullMechData.mechinternals_jumpJetsCriticals;
 }
 
@@ -614,15 +809,17 @@ function getMechPartSlots(mechPart, leftRight) {
     return critDetails;
 }
 
-/* EXAMPLE pageload calls to this function */
-// displayCrits("leftArmCritTable", "mecharm", 0);
-// displayCrits("rightArmCritTable", "mecharm", 1);
-// displayCrits("headCritTable", "mechhead", 2);
-// displayCrits("leftTorsoCritTable", "mechtorso", 0);
-// displayCrits("rightTorsoCritTable", "mechtorso", 1);
-// displayCrits("leftLegCritTable", "mechleg", 0);
-// displayCrits("rightLegCritTable", "mechleg", 1);
-// displayCrits("centerCritTable", "mechtorsocenter", 2);
+/* 
+    EXAMPLE pageload calls to this function
+    displayCrits("leftArmCritTable", "mecharm", 0);
+    displayCrits("rightArmCritTable", "mecharm", 1);
+    displayCrits("headCritTable", "mechhead", 2);
+    displayCrits("leftTorsoCritTable", "mechtorso", 0);
+    displayCrits("rightTorsoCritTable", "mechtorso", 1);
+    displayCrits("leftLegCritTable", "mechleg", 0);
+    displayCrits("rightLegCritTable", "mechleg", 1);
+    displayCrits("centerCritTable", "mechtorsocenter", 2);
+*/
 function displayCrits(idToMod, mechPart, leftRight) {
     let weaponSlotsAvailToEval = weaponSlotsAvail();
     let numUnmovable = weaponSlotsAvailToEval[mechPart];
@@ -667,10 +864,7 @@ function displayCrits(idToMod, mechPart, leftRight) {
 }
 
 function updateCrits(mechPart, leftRight, critToAdd, addRemove, containerID, rowIndex = false) {
-    console.log(mechPart, leftRight, critToAdd, addRemove, containerID);
-
     let critDetails = getMechPartSlots(mechPart, leftRight);
-    console.log(critDetails);
 
     let TotalSlotsAvailable = parseInt(Object.keys(critDetails).length, 10);
     let slotsUnused = parseInt(Object.values(critDetails).filter((value) => !Boolean(value)).length, 10);
@@ -678,11 +872,10 @@ function updateCrits(mechPart, leftRight, critToAdd, addRemove, containerID, row
     let tonnageSlotsAvail = parseInt(weaponSlotsAvail()[mechPart], 10);
     let critToAddDetails = dataByWeaponName[critToAdd];
     let critToAddSlots = parseInt(critToAddDetails.slotsRequired, 10);
-    let critToAddTons = parseInt(critToAddDetails.tons, 10);
+    let critToAddTons = parseFloat(critToAddDetails.tons, 10);
 
     if (addRemove === "remove") {
         fullMechData.mechinternals_weaponTonnage -= critToAddTons;
-        fullMechData.mechinternals_totalInternalTonnage -= critToAddTons;
 
         let critEntryDeleted = false;
         for (let [compKey, slotCompVal] of Object.entries(critDetails)) {
@@ -704,7 +897,6 @@ function updateCrits(mechPart, leftRight, critToAdd, addRemove, containerID, row
         updateTonnage();
     } else if (critToAddSlots <= tonnageSlotsAvail - slotsUsed) {
         fullMechData.mechinternals_weaponTonnage += critToAddTons;
-        fullMechData.mechinternals_totalInternalTonnage += critToAddTons;
 
         let critToAddSlotsCopy = critToAddSlots;
         for (let [compKey, slotCompVal] of Object.entries(critDetails)) {
@@ -767,6 +959,9 @@ $(document).ready(function () {
             fullMechData = mechData; // Set globally
             console.log(mechData);
 
+            // Need mech type for weapons
+            buildWeaponLis();
+
             // Proceed to build out the views
             updateMechMeta(mechData);
             displayArmorSection("mechArmor", mechData);
@@ -778,7 +973,7 @@ $(document).ready(function () {
     };
     getFullMechData(); // Called on page load
 
-    $(".weaponChildLI").click(function () {
+    $(document).on("click", ".weaponChildLI", function () {
         var weaponName = $(this).attr("name");
         let weaponDetails = dataByWeaponName[weaponName];
 
@@ -811,14 +1006,13 @@ $(document).ready(function () {
         }
     );
 
-    $(".weaponChildLI").hover(
-        function () {
-            $(this).addClass("weaponHighlight");
-        },
-        function () {
-            $(this).removeClass("weaponHighlight");
-        }
-    );
+    $(document).on("mouseenter", ".weaponChildLI", function () {
+        $(this).addClass("weaponHighlight");
+    });
+
+    $(document).on("mouseleave", ".weaponChildLI", function () {
+        $(this).removeClass("weaponHighlight");
+    });
 
     $(".selector").hover(
         function () {
@@ -1052,6 +1246,31 @@ function changeMechStats(armorLocation, incDec, armorUpdateID) {
     updateTonnage();
 }
 
+function calculateArmorWeight(armorPoints, techBase = "Clan", armorType = "Ferro-Fibrous") {
+    // Weight per point of armor based on armor type and tech base
+    const armorWeightPerPoint = {
+        "Inner-Sphere": {
+            Standard: 1 / 16, // 16 points per ton
+            "Ferro-Fibrous": 1 / 18.5, // 18.5 points per ton
+        },
+        Clan: {
+            Standard: 1 / 16, // 16 points per ton
+            "Ferro-Fibrous": 1 / 20, // 20 points per ton
+        },
+    };
+
+    // Validate input
+    if (!armorWeightPerPoint[techBase] || !armorWeightPerPoint[techBase][armorType]) {
+        throw new Error("Invalid tech base or armor type");
+    }
+
+    const weightPerPoint = armorWeightPerPoint[techBase][armorType];
+    const armorWeight = armorPoints * weightPerPoint;
+
+    // Return the weight rounded up to the nearest 0.5 tons (BattleTech rounding)
+    return Math.ceil(armorWeight * 2) / 2;
+}
+
 function updateTonnage() {
     // Example data from mechFullData we utilize in this function
     /*
@@ -1069,13 +1288,37 @@ function updateTonnage() {
         "mechexternalarmor_rearRightTorsoArmor": 4,
         "mechexternalarmor_torsoLeftArmor": 4,
         "mechexternalarmor_torsoRightArmor": 4,
+
+        "mechinternals_cockpitTonnage": "3.0",
+        "mechinternals_engineTonnage": "2.5",
+        "mechinternals_enhancementsTonnage": 1,
+        "mechinternals_gyroTonnage": "2.5",
+        "mechinternals_heatSinksTonnage": "0.0",
+        "mechinternals_internalStructureTonnage": 14,
+        "mechinternals_jumpJetsTonnage": "6",
+        "mechinternals_totalInternalTonnage": 19,
     */
 
     let internalWeight = fullMechData.mechinternals_totalInternalTonnage;
     let externalArmor = fullMechData.mechexternalarmor_mechArmorTotal;
     let maxTonnage = fullMechData.mechs_maxTonnage;
-    let externalArmorWeight = Math.ceil(externalArmor / 8) / 2;
-    let totalWeight = externalArmorWeight + internalWeight;
+
+    // IS mechs can have FF armor but most don't - just assume standard armor
+    let armorType = fullMechData.mechs_techBase === "Inner-Sphere" ? "Standard" : "Ferro-Fibrous";
+
+    let externalArmorWeight = calculateArmorWeight(externalArmor, fullMechData.mechs_techBase, armorType);
+
+    let totalWeight =
+        parseFloat(externalArmorWeight, 10) +
+        parseFloat(internalWeight, 10) +
+        parseFloat(fullMechData.mechinternals_weaponTonnage, 10);
+
+    console.log({
+        externalArmorWeight,
+        internalWeight,
+        mechinternals_weaponTonnage: fullMechData.mechinternals_weaponTonnage,
+        totalWeight,
+    });
 
     let internalStrucPtsToUse =
         fullMechData.mechs_techBase === "Clan" ? clanMechInternalStructurePoints : isMechInternalStructurePoints;
@@ -1103,27 +1346,6 @@ function updateTonnage() {
     document.getElementById("totalWeightArmorPage").innerHTML =
         "<strong>Current Tonnage:</strong> " + totalWeight + "/" + maxTonnage;
 }
-
-$(document).ready(function () {
-    $(".weaponChildLI").draggable({
-        revert: true,
-        revertDuration: 0,
-        cursor: "move",
-        start: function (event, ui) {
-            $(this).toggleClass("draggingWeapon");
-            $(this).css("width", "80px");
-
-            mousePos = event.pageX - 224;
-            $(this).css("margin-left", mousePos);
-        },
-        stop: function (event, ui) {
-            $(this).toggleClass("draggingWeapon");
-            $(this).css("margin-left", "0px");
-            $(this).css("width", "auto");
-            $(this).css("height", "auto");
-        },
-    });
-});
 
 // THIS FUNCTION MAKES THE CRIT CONTAINERS DROPPABLE BUT HAS TO BE CALLED AFTER
 // THOSE CONTAINERS ARE MADE DYNAMICALLY.

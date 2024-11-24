@@ -229,50 +229,19 @@ $login = new Login();
                 <div id="weaponAccordion">
                     <ul class="weaponAccordionTabs">
                         <li class="weaponAccordionLI">Energy
-                            <ul id="weaponChild">
-                                <li class="weaponChildLI" name="Small Laser">Small Laser</li>
-                                <li class="weaponChildLI" name="Medium Laser">Medium Laser</li>
-                                <li class="weaponChildLI" name="Large Laser">Large Laser</li>
-                                <li class="weaponChildLI" name="PPC">PPC</li>
-                                <li class="weaponChildLI" name="Flamer">Flamer</li>
-                                <li class="weaponChildLI" name="Vehicle Flamer">Vehicle Flamer</li>
+                            <ul id="weaponChild" class="wc_Energy">
                             </ul>
                         </li>
                         <li class="weaponAccordionLI">Ballistics
-                            <ul id="weaponChild">
-                                <li class="weaponChildLI" name="Machine Gun">Machine Gun</li>
-                                <li class="weaponChildLI" name="Autocannon 2">Autocannon 2</li>
-                                <li class="weaponChildLI" name="Autocannon 5">Autocannon 5</li>
-                                <li class="weaponChildLI" name="Autocannon 10">Autocannon 10</li>
-                                <li class="weaponChildLI" name="Autocannon 20">Autocannon 20</li>
+                            <ul id="weaponChild" class="wc_Ballistics">
                             </ul>
                         </li>
                         <li class="weaponAccordionLI">Missiles
-                            <ul id="weaponChild">
-                                <li class="weaponChildLI" name="SRM-2">SRM-2</li>
-                                <li class="weaponChildLI" name="SRM-4">SRM-4</li>
-                                <li class="weaponChildLI" name="SRM-6">SRM-6</li>
-                                <li class="weaponChildLI" name="LRM-5">LRM-5</li>
-                                <li class="weaponChildLI" name="LRM-10">LRM-10</li>
-                                <li class="weaponChildLI" name="LRM-15">LRM-15</li>
-                                <li class="weaponChildLI" name="LRM-20">LRM-20</li>
+                            <ul id="weaponChild" class="wc_Missiles">
                             </ul>
                         </li>
                         <li class="weaponAccordionLI">Ammunition
-                            <ul id="weaponChild">
-                                <li class="weaponChildLI" name="SRM-2 Ammo">SRM-2 Ammo</li>
-                                <li class="weaponChildLI" name="SRM-4 Ammo">SRM-4 Ammo</li>
-                                <li class="weaponChildLI" name="SRM-6 Ammo">SRM-6 Ammo</li>
-                                <li class="weaponChildLI" name="LRM-5 Ammo">LRM-5 Ammo</li>
-                                <li class="weaponChildLI" name="LRM-10 Ammo">LRM-10 Ammo</li>
-                                <li class="weaponChildLI" name="LRM-15 Ammo">LRM-15 Ammo</li>
-                                <li class="weaponChildLI" name="LRM-20 Ammo">LRM-20 Ammo</li>
-                                <li class="weaponChildLI" name="Machine Gun Ammo">Machine Gun Ammo</li>
-                                <li class="weaponChildLI" name="Autocannon 2 Ammo">Autocannon 2 Ammo</li>
-                                <li class="weaponChildLI" name="Autocannon 5 Ammo">Autocannon 5 Ammo</li>
-                                <li class="weaponChildLI" name="Autocannon 10 Ammo">Autocannon 10 Ammo</li>
-                                <li class="weaponChildLI" name="Autocannon 20 Ammo">Autocannon 20 Ammo</li>
-                                <li class="weaponChildLI" name="Vehicle Flamer Ammo">Vehicle Flamer Ammo</li>
+                            <ul id="weaponChild" class="wc_Ammunition">
                             </ul>
                         </li>
                     </ul>
@@ -327,6 +296,7 @@ $login = new Login();
                         <td>Ammo Needed</td>
                         <td>Weapon Type</td>
                         <td>Avail. Date</td>
+                        <td>Tech Base</td>
                     </tr>
                     <tr id="weaponDetails">
                         <td></td>
