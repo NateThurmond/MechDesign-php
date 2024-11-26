@@ -16,8 +16,8 @@ Passionate about the BattleTech Boardgame, I endeavored to make a web based appl
 
 * cp .env.example .env (modify as needed)
 * docker-compose down -v
-* docker compose build
-* docker compose up
+* docker build --no-cache -t php-app .
+* docker compose up -d
 
 ### Executing program
 
