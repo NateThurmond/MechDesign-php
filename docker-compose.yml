@@ -9,6 +9,7 @@ services:
     volumes:
       - ./:/var/www/html
       - ./.env:/var/www/.env
+      - /var/www/html/vendor  # Exclude vendor directory from being overwritten
     depends_on:
       - db  # Ensure MySQL starts before the PHP app
     environment:

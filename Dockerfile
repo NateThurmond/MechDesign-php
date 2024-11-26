@@ -23,9 +23,6 @@ COPY . /var/www/html/
 # Install PHP dependencies via Composer (this will install phpdotenv)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set permissions for Apache
-RUN chown -R www-data:www-data /var/www/html
-
 # Expose Apache's default port
 EXPOSE 80
 
