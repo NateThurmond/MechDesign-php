@@ -21,7 +21,10 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql && \
 COPY . /var/www/html/
 
 # Install PHP dependencies via Composer (this will install phpdotenv)
-RUN composer install
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Set permissions for Apache
+RUN chown -R www-data:www-data /var/www/html
 
 # Expose Apache's default port
 EXPOSE 80
