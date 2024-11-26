@@ -2,7 +2,7 @@
 
     <?php
     if ($login->isUserLoggedIn() == false) {
-        echo 
+        echo
             '<form method="post" name="form1" action="index.php">
             <p><strong>Member Login</strong></p>
 
@@ -24,9 +24,8 @@
             }
         }
         echo '</form>';
-    }
-    else {
-        echo 
+    } else {
+        echo
             '<p id="welcomeText"><strong>Welcome</strong></p>
             <p id="userNameShowing">
             <strong>' . $GLOBALS['user_name'] . '</strong>

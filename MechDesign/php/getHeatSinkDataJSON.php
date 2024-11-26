@@ -3,7 +3,7 @@
     require_once("../config/config.php");
     include("../php/DB_Conn.php");
 
-    $mechID = $_SESSION['mechID'];
+    $mechID = filter_input(INPUT_GET, 'mechIDPassed', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 1;
     
     $queryHeatSinkData = "SELECT * FROM mechinternals WHERE mechID = $mechID";
     $heatSinkType = mysqli_query($conn, $queryHeatSinkData)->fetch_object()->heatSinkType;

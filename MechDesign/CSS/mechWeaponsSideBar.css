@@ -141,6 +141,8 @@
     height: 11px;
    //-webkit-box-shadow: 0px 0px 10px black;
    //-moz-box-shadow: 0px 0px 10px black;
+    max-width: 84px;
+    overflow: auto;
 }
 
 .draggingWeapon {

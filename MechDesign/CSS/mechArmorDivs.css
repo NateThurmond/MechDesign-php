@@ -1,17 +1,19 @@
-
 /*
     All of the contents of this CSS page relate to how the armor is displayed from the mechdesign
     Page. This includes how the circles are displayed and the divs that contain them.
 */
 
 #mechArmor {
-    background-image:url('../images/emptymech5.jpg');
-    background-size:cover; 
-    background-position:center center; 
-    background-repeat:no-repeat; 
+    background-image: url("../images/emptymech5.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
     background-color: lightgrey;
-    top: 0px; right: 8px; bottom: 0; left: 335px;
-    border: 4px solid #D65C33;
+    top: 0px;
+    right: 8px;
+    bottom: 0;
+    left: 335px;
+    border: 4px solid #d65c33;
     display: inline-block;
     height: 650px;
     width: 550px;
@@ -21,6 +23,14 @@
     position: absolute;
     word-wrap: break-word;
     text-align: center;
+}
+
+.internalStructurePoints {
+    color: blue;
+    position: absolute;
+    font-size: 15px;
+    text-align: center;
+    min-width: 16px;
 }
 
 #leftArmArmor {
@@ -328,7 +338,6 @@
     height: 9px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
-    border-radius: 10px; 
+    border-radius: 10px;
     border: 2px solid black;
 }
-

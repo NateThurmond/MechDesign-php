@@ -1,31 +1,13 @@
 <?php
 
-    require_once("../config/config.php");
-    include("../php/DB_Conn.php");
+require_once("../config/config.php");
+include("../php/DB_Conn.php");
 
-    $query = "SELECT * FROM mechs NATURAL JOIN mechengine";
-    $data = mysqli_query($conn, $query);
-    
-    
-    echo "<table class='mechPickTable' border='1'>
-        <tr>
-        <th>Mech Name</th>
-        <th>Armor</th>
-        <th>Movement</th>
-        <th>Tonnage</th>
-        <th>Intro Date</th>
-        </tr>";
+$query = "SELECT * FROM mechs NATURAL JOIN mechengine";
+$data = mysqli_query($conn, $query);
 
-        while($row = mysqli_fetch_array($data)) {
-
-            echo "<tr>";
-            echo "<td id='mechPickLink' >" . "<a href='mechDesign.php?mechIDPassed=" . $row['mechID'] . "'>" .  $row['mechName'] . "</a> </td>";
-            echo "<td>" . $row['armor'] . "</td>";
-            echo "<td>" . $row['mechWalk'] . " / " . $row['mechRun'] . " / " . $row['mechJump'] . "</td>";
-            echo "<td>" . $row['maxTonnage'] . "</td>";
-            echo "<td>" . $row['introDate'] . "</td>";
-            echo "</tr>";
-        }
-        echo "</table>";
-
-    $conn->close();
+$return = [];
+while ($row = mysqli_fetch_assoc($data)) {
+    $return[] = $row;
+}
+echo json_encode($return);
