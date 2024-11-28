@@ -1,46 +1,40 @@
 <?php
 
-    require_once("../config/config.php");
-    include("../php/DB_Conn.php");
 
-    $mechID = filter_input(INPUT_GET, 'mechIDPassed', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? 1;
-    
-    
-    $queryEngineRating = "SELECT engineRating FROM mechengine WHERE mechID = $mechID AND activeEngine = 1";
-    $queryMechTonnage = "SELECT maxTonnage FROM mechs WHERE mechID = $mechID";
-    $queryMechInternals = "SELECT * FROM mechinternals WHERE mechID = $mechID";
-    
-    $engineRating = mysqli_query($conn, $queryEngineRating)->fetch_object()->engineRating;
-    $mechTonnage = mysqli_query($conn, $queryMechTonnage)->fetch_object()->maxTonnage;
-    $mechInternals = mysqli_query($conn, $queryMechInternals);
-    
-    $internalsArray = array();
-    if( $mechInternals ) {
-        $internalsArray = mysqli_fetch_array($mechInternals);
-    }
-    else {
-        die('Could not fetch data: ' . mysqli_error($conn)); 
-    }
-   
+/*
+    Author: Nathan Thurmond
+    Revision Date: 2024-11-27
+    Notes: I'm keeping this script in case I need to reference the calcuations later but
+        the code itself is deprecated in favor of whole model approach loaded to front-end
+*/
 
+/*
+
+    Here's the psuedo-code that gets mech engine data. Keeping for reference
+    
+    $engineRating = MechDesign.engineRating.engineRating;
+    $mechTonnage = MechDesign.mechs.maxTonnage;
+    $mechInternals = MechDesign.mechinternals.*
+    
     $EngineDataArray = array(
-    "engineRating" => $engineRating,
-    "mechTonnage" => $mechTonnage,
-    "internalsTonnage" => $internalsArray['internalStructureTonnage'],
-    "internalsCriticals" => $internalsArray['internalStructureCriticals'],
-    "engineTonnage" => $internalsArray['engineTonnage'],
-    "engineCriticals" => $internalsArray['engineCriticals'],
-    "gyroTonnage" => $internalsArray['gyroTonnage'],
-    "gyroCriticals" => $internalsArray['gyroCriticals'],
-    "cockpitTonnage" => $internalsArray['cockpitTonnage'],
-    "cockpitCriticals" => $internalsArray['cockpitCriticals'],
-    "heatSinksTonnage" => $internalsArray['heatSinksTonnage'],
-    "heatSinksCriticals" => $internalsArray['heatSinksCriticals'],
-    "enhancementsTonnage" => $internalsArray['enhancementsTonnage'],
-    "enhancementsCriticals" => $internalsArray['enhancementsCriticals'],
-    "jumpJetsTonnage" => $internalsArray['jumpJetsTonnage'],
-    "jumpJetsCriticals" => $internalsArray['jumpJetsCriticals']
+        "engineRating" => $engineRating,
+        "mechTonnage" => $mechTonnage,
+        "internalsTonnage" => $internalsArray['internalStructureTonnage'],
+        "internalsCriticals" => $internalsArray['internalStructureCriticals'],
+        "engineTonnage" => $internalsArray['engineTonnage'],
+        "engineCriticals" => $internalsArray['engineCriticals'],
+        "gyroTonnage" => $internalsArray['gyroTonnage'],
+        "gyroCriticals" => $internalsArray['gyroCriticals'],
+        "cockpitTonnage" => $internalsArray['cockpitTonnage'],
+        "cockpitCriticals" => $internalsArray['cockpitCriticals'],
+        "heatSinksTonnage" => $internalsArray['heatSinksTonnage'],
+        "heatSinksCriticals" => $internalsArray['heatSinksCriticals'],
+        "enhancementsTonnage" => $internalsArray['enhancementsTonnage'],
+        "enhancementsCriticals" => $internalsArray['enhancementsCriticals'],
+        "jumpJetsTonnage" => $internalsArray['jumpJetsTonnage'],
+        "jumpJetsCriticals" => $internalsArray['jumpJetsCriticals']
     );
 
-echo json_encode($EngineDataArray);
+    echo json_encode($EngineDataArray);
 
+*/
