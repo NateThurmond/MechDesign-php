@@ -38,6 +38,9 @@ ex. [@NateThurmond](https://github.com/NateThurmond)
 
 ## Version History
 
+-   0.3
+    -   Final iteration includes docker options for self-launch
+    -   Includes init DB scripts so anyone can spin up application
 -   0.2
     -   Various bug fixes and optimizations (improved JS event handlers)
     -   See [commit change]() or See [release history]()
