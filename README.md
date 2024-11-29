@@ -34,7 +34,7 @@ Save once you customized your mech
 
 ## Authors
 
-ex. [@NateThurmond](https://github.com/NateThurmond)
+[@NateThurmond](https://github.com/NateThurmond)
 
 ## Version History
 
