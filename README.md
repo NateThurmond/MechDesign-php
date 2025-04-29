@@ -43,7 +43,7 @@ Save once you customized your mech
     -   Includes init DB scripts so anyone can spin up application
 -   0.2
     -   Various bug fixes and optimizations (improved JS event handlers)
-    -   See [commit change]() or See [release history]()
+    -   See [commit change](https://github.com/NateThurmond/MechDesign-php/commits/master/) or See [release history](https://github.com/NateThurmond/MechDesign-php/releases)
 -   0.1
     -   Initial Release
 
